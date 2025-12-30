@@ -1,15 +1,16 @@
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100;
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
 
   background: url("images/day-bg.jpg") center / cover no-repeat fixed;
   color: #111;
 
-  transition: background 0.4s ease, color 0.4s ease;
+  transition: background 0.4 ease, color 0.4 ease;
 }
 
 body.dark {
   background: url("images/bg-dark.jpg") center / cover no-repeat fixed;
   color: #f1f1f1;
 }
+
