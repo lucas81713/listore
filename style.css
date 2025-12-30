@@ -4,17 +4,14 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
   min-height: 100vh;
 
-  background-image: url("images/day-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: url("images/day-bg.jpg") center / cover no-repeat fixed;
+  color: #111;
 
-  transition: background-image 0.4s ease, color 0.4s ease;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* ---------- DARK MODE ---------- */
 body.dark {
-  background-image: url("images/bg-dark.jpg");
+  background: url("images/bg-dark.jpg") center / cover no-repeat fixed;
   color: #f1f1f1;
 }
-
