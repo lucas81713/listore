@@ -1,9 +1,11 @@
-const toggle = document.getElementById("darkToggle");
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.getElementById("darkToggle");
 
-toggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
+  toggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
 
-  toggle.textContent = document.body.classList.contains("dark")
-    ? "☀️"
-    : "🌙";
+    toggle.textContent = document.body.classList.contains("dark")
+      ? "☀️"
+      : "🌙";
+  });
 });
