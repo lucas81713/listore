@@ -1,162 +1,20 @@
-/* Reset */
-* {
-  box-sizing: border-box;
-}
-
-/* Page background (DAY) */
+/* ---------- BASE ---------- */
 body {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
   min-height: 100vh;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  /* DEBUG: fallback color */
-  background-color: red;
-
-  background-image: url("./images/bg-day.jpg");
+  background-image: url("images/day-bg.jpg");
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  background-attachment: fixed;
 
-  transition: background 0.3s ease;
+  transition: background-image 0.4s ease, color 0.4s ease;
 }
 
+/* ---------- DARK MODE ---------- */
 body.dark {
-  background-image: url("/images/bg-day.jpg");
-background-image: url("C:/Users/...");
-
+  background-image: url("images/bg-dark.jpg");
+  color: #f1f1f1;
 }
 
-
-/* Notebook app */
-.app {
-  width: 340px;
-  padding: 24px 24px 24px 36px;
-
-  background-color: rgba(253, 252, 247, 0.85);
-  border-radius: 6px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  /* Lined paper */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 28px,
-    rgba(0, 0, 0, 0.06) 29px
-  );
-}
-
-/* Dark notebook */
-body.dark .app {
-  background-color: rgba(20, 20, 20, 0.85);
-  color: #f5f5f5;
-}
-
-/* Red notebook margin */
-.app::before {
-  content: "";
-  position: absolute;
-  left: 18px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #e07a7a;
-}
-
-/* Title */
-h1 {
-  margin: 0 0 10px;
-  text-align: center;
-}
-
-/* Input */
-input {
-  font-family: inherit;
-  font-size: 16px;
-  padding: 6px;
-  border: none;
-  border-bottom: 1px solid #aaa;
-  background: transparent;
-  outline: none;
-  color: inherit;
-}
-
-/* Buttons */
-button {
-  font-family: inherit;
-  font-size: 15px;
-  padding: 6px;
-  cursor: pointer;
-}
-
-/* Theme toggle */
-#themeToggle {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-/* List */
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* List items */
-li {
-  cursor: pointer;
-  padding: 4px 0;
-}
-
-/* Crossed out */
-li.done {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-/* 📱 Mobile & iPad layout */
-@media (max-width: 768px) {
-  body {
-    align-items: flex-start;
-    padding: 20px;
-  }
-
-  .app {
-    width: 100%;
-    max-width: 500px;
-    margin-top: 40px;
-  }
-
-  h1 {
-    font-size: 20px;
-  }
-
-  input {
-    font-size: 18px;
-  }
-
-  button {
-    font-size: 16px;
-  }
-  @media (min-width: 769px) and (max-width: 1024px) {
-  .app {
-    width: 420px;
-  }
-}
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-input {
-  font-size: 18px; /* prevents iOS zoom */
-}
-
-}
