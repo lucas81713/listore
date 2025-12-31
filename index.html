@@ -28,11 +28,26 @@
     if (input.value === "") return;
 
     const li = document.createElement("li");
-    li.textContent = input.value;
+
+    // text span
+    const text = document.createElement("span");
+    text.textContent = input.value;
+
+    // delete button
+    const del = document.createElement("button");
+    del.textContent = "✖";
+    del.className = "delete-btn";
+
+    del.onclick = () => {
+      li.remove();
+    };
 
     li.onclick = () => {
       li.style.textDecoration = "line-through";
     };
+
+    li.appendChild(text);
+    li.appendChild(del);
 
     list.prepend(li);
     input.value = "";
@@ -41,8 +56,6 @@
   button.onclick = addItem;
 
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      addItem();
-    }
+    if (e.key === "Enter") addItem();
   });
 </script>
