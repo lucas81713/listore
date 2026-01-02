@@ -91,3 +91,21 @@ li:hover {
     font-size: 18px;
   }
 }
+li {
+  position: relative;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  touch-action: pan-y;
+}
+
+li.swiping {
+  transition: none;
+}
+
+li.delete {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+li.done span {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
