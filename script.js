@@ -2,8 +2,12 @@ const input = document.getElementById("itemInput");
 const button = document.getElementById("addBtn");
 const list = document.getElementById("list");
 
+let isLoading = true;
+
 /* ---------- SAVE LIST ---------- */
 function saveList() {
+  if (isLoading) return;
+
   const items = [];
   document.querySelectorAll("#list li").forEach(li => {
     items.push({
@@ -25,13 +29,11 @@ function createItem(text, done = false) {
   delBtn.textContent = "❌";
   delBtn.className = "delete-btn";
 
-  // Toggle done
   span.addEventListener("click", () => {
     li.classList.toggle("done");
     saveList();
   });
 
-  // Delete item
   delBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     li.remove();
@@ -44,7 +46,6 @@ function createItem(text, done = false) {
   if (done) li.classList.add("done");
 
   list.prepend(li);
-  saveList();
 }
 
 /* ---------- ADD ITEM ---------- */
@@ -54,6 +55,7 @@ function addItem() {
 
   createItem(text);
   input.value = "";
+  saveList();
 }
 
 button.addEventListener("click", addItem);
@@ -68,3 +70,5 @@ const saved = JSON.parse(localStorage.getItem("shoppingList")) || [];
 saved.forEach(item => {
   createItem(item.text, item.done);
 });
+
+isLoading = false;
