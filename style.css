@@ -61,3 +61,33 @@ li {
 li:hover {
   background: #e2e8f0;
 }
+
+/* Mobile-first tweaks */
+@media (max-width: 600px) {
+  body {
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  input,
+  button {
+    font-size: 18px;
+    padding: 14px;
+  }
+
+  li {
+    padding: 14px;
+    font-size: 17px;
+  }
+
+  .delete-btn {
+    font-size: 18px;
+  }
+}
