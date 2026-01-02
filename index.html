@@ -2,17 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Shopping List</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="app">
     <h1>🛒 Shopping List</h1>
 
-    <input id="itemInput" type="text" placeholder="Add an item..." />
+    <input
+      id="itemInput"
+      type="text"
+      placeholder="Add an item..."
+      inputmode="text"
+    />
+
     <button id="addBtn">Add</button>
 
     <ul id="list"></ul>
