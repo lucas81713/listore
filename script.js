@@ -68,3 +68,7 @@ const saved = JSON.parse(localStorage.getItem("shoppingList")) || [];
 saved.forEach(item => {
   createItem(item.text, item.done);
 });
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
