@@ -8,7 +8,6 @@ const FILES = [
   "./manifest.json"
 ];
 
-// this is a test
 self.addEventListener("install", (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(FILES))
