@@ -16,8 +16,8 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 
   display: flex;
-  justify-content: flex-start; /* NOT center */
-  align-items: center;
+  justify-content: center;   /* CENTER LEFT ↔ RIGHT */
+  align-items: flex-start;   /* TOP ↕ NOT CENTER */
 }
 
 .app {
@@ -100,3 +100,4 @@ li span.done {
 .delete-btn:active {
   transform: scale(0.9);
 }
+
