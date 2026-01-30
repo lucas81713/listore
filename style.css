@@ -3,18 +3,21 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-body {
+html, body {
   margin: 0;
-  min-height: 100vh;
+  padding: 0;
+  min-height: 100%;
+  background: #6f8fdc;
+}
 
+/* ⬇️ IMPORTANT CHANGE HERE */
+body {
   padding-top: calc(env(safe-area-inset-top) + 40px);
   padding-bottom: env(safe-area-inset-bottom);
 
   display: flex;
-  justify-content: center;   /* center horizontally */
-  align-items: flex-start;   /* stay near top */
-
-  background-color: #7391d9;
+  justify-content: flex-start; /* NOT center */
+  align-items: center;
 }
 
 .app {
@@ -22,63 +25,78 @@ body {
   width: 320px;
   padding: 20px;
   border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
 }
 
 h1 {
-  margin: 0 0 16px;
   text-align: center;
+  margin-bottom: 16px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 2px solid #000;
+  padding: 12px;
   font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 
 button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
   border: none;
   background: #4f46e5;
   color: white;
-  font-size: 16px;
   cursor: pointer;
 }
 
-button:hover {
-  background: #4338ca;
+button:active {
+  transform: scale(0.97);
 }
 
 ul {
   list-style: none;
   padding: 0;
-  margin-top: 15px;
+  margin-top: 16px;
 }
 
 li {
   background: #eef2ff;
-  padding: 10px 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-
+  margin-bottom: 8px;
+  padding: 12px;
+  border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.remove {
-  background: #ef4444;
-  border: none;
-  color: white;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+li span {
+  flex: 1;
   cursor: pointer;
+}
+
+li span.done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   font-size: 18px;
-  line-height: 1;
+  cursor: pointer;
+}
+
+.delete-btn:active {
+  transform: scale(0.9);
 }
