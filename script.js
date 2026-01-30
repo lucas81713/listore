@@ -1,27 +1,37 @@
+const form = document.getElementById("itemForm");
 const input = document.getElementById("itemInput");
-const addBtn = document.getElementById("addBtn");
 const list = document.getElementById("list");
 
-addBtn.addEventListener("click", addItem);
-input.addEventListener("keypress", e => {
-  if (e.key === "Enter") addItem();
-});
+function addItem(text) {
+  const li = document.createElement("li");
 
-function addItem() {
+  const span = document.createElement("span");
+  span.textContent = text;
+
+  const del = document.createElement("button");
+  del.textContent = "🗑️";
+  del.className = "delete-btn";
+
+  span.addEventListener("click", () => {
+    span.classList.toggle("done");
+  });
+
+  del.addEventListener("click", (e) => {
+    e.stopPropagation();
+    li.remove();
+  });
+
+  li.appendChild(span);
+  li.appendChild(del);
+  list.prepend(li);
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
   const text = input.value.trim();
   if (!text) return;
 
-  const li = document.createElement("li");
-  li.textContent = text;
-
-  const removeBtn = document.createElement("button");
-  removeBtn.textContent = "×";
-  removeBtn.className = "remove";
-
-  removeBtn.onclick = () => li.remove();
-
-  li.appendChild(removeBtn);
-  list.appendChild(li);
-
+  addItem(text);
   input.value = "";
-}
+});
