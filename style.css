@@ -1,125 +1,95 @@
-* {
-  box-sizing: border-box;
-}
-
-* body{
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  font-family: 'poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
+/* ---------- PAGE ---------- */
 body {
   margin: 0;
-  min-height: 100svh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f4f6f8;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: #688ee0;
+  align-items: center;
+  height: 100vh;
 }
 
+/* ---------- APP CARD ---------- */
 .app {
   background: white;
   padding: 20px;
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
-
+/* ---------- TITLE ---------- */
 h1 {
   text-align: center;
-  margin-bottom: 14px;
-}
-
-input {
-  width: 100%;
-  padding: 14px;
-  font-size: 17px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-
-#addBtn {
-  width: 100%;
-  padding: 14px;
-  background: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 17px;
-  cursor: pointer;
   margin-bottom: 16px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* LIST ITEM */
-li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* ---------- INPUT ---------- */
+input {
+  width: 100%;
   padding: 12px;
-  background: #f1f5f9;
-  border-radius: 12px;
-  margin-bottom: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
-/* TEXT AREA */
-li span {
-  flex: 1;
+/* ---------- ADD BUTTON ---------- */
+#addBtn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
   font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  background: #4f46e5;
+  color: white;
   cursor: pointer;
 }
 
-/* DONE STATE */
-li.done span {
-  text-decoration: line-through;
-  opacity: 0.6;
+#addBtn:hover {
+  background: #4338ca;
 }
 
-/* DELETE BUTTON — BIGGER TAP AREA */
-.delete-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: #ff0000;
-  color: white;
-  border: none;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+/* ---------- LIST ---------- */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
 }
+
+/* ---------- LIST ITEM ---------- */
 li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  background: #f1f5f9;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  gap: 10px;
 }
 
+/* ---------- ITEM TEXT ---------- */
 li span {
   flex: 1;
   word-break: break-word;
 }
 
+/* ---------- BUTTON GROUP ---------- */
 .item-buttons {
   display: flex;
   gap: 6px;
 }
 
+/* ---------- EDIT / DELETE ---------- */
 .edit-btn,
 .delete-btn {
   background: none;
   border: none;
-  cursor: pointer;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .edit-btn {
@@ -128,4 +98,14 @@ li span {
 
 .delete-btn {
   color: #dc2626;
+}
+
+/* ---------- MOBILE FRIENDLY ---------- */
+@media (max-width: 480px) {
+  .app {
+    border-radius: 0;
+    height: 100vh;
+    max-width: none;
+    box-shadow: none;
+  }
 }
