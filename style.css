@@ -3,7 +3,6 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Fix iOS white top area */
 html, body {
   margin: 0;
   padding: 0;
@@ -11,13 +10,14 @@ html, body {
   background: #6f8fdc;
 }
 
-/* Fill safe areas on iOS */
+/* ⬇️ IMPORTANT CHANGE HERE */
 body {
-  padding-top: env(safe-area-inset-top);
+  padding-top: calc(env(safe-area-inset-top) + 40px);
   padding-bottom: env(safe-area-inset-bottom);
+
   display: flex;
+  justify-content: flex-start; /* NOT center */
   align-items: center;
-  justify-content: center;
 }
 
 .app {
@@ -86,7 +86,6 @@ li span.done {
   opacity: 0.6;
 }
 
-/* 🔴 RED DELETE BUTTON */
 .delete-btn {
   background: #ef4444;
   color: white;
