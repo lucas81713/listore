@@ -95,4 +95,37 @@ li.done span {
   display: flex;
   align-items: center;
   justify-content: center;
+
+}
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+li span {
+  flex: 1;
+  word-break: break-word;
+}
+
+.item-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.edit-btn,
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.edit-btn {
+  color: #2563eb;
+}
+
+.delete-btn {
+  color: #dc2626;
 }
