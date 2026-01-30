@@ -2,53 +2,74 @@ const input = document.getElementById("itemInput");
 const button = document.getElementById("addBtn");
 const list = document.getElementById("list");
 
-function createItem(text) {
+/* ---------- SAVE LIST ---------- */
+function saveList() {
+  const items = [];
+  document.querySelectorAll("#list li").forEach(li => {
+    items.push({
+      text: li.querySelector("span").textContent,
+      done: li.classList.contains("done")
+    });
+  });
+  localStorage.setItem("shoppingList", JSON.stringify(items));
+}
+
+/* ---------- CREATE ITEM ---------- */
+function createItem(text, done = false) {
   const li = document.createElement("li");
 
   const span = document.createElement("span");
   span.textContent = text;
 
-  const buttons = document.createElement("div");
-  buttons.className = "item-buttons";
-
-  const editBtn = document.createElement("button");
-  editBtn.textContent = "✏️";
-  editBtn.className = "edit-btn";
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "❌";
-  deleteBtn.className = "delete-btn";
-
-  // ✏️ EDIT
-  editBtn.addEventListener("click", () => {
-    const newText = prompt("Edit item:", span.textContent);
-    if (newText !== null && newText.trim() !== "") {
-      span.textContent = newText.trim();
-    }
+  const delBtn = document.createElement("button");
+  delBtn.textContent = "🗑️";
+  delBtn.className = "delete-btn";
+  
+    // Toggle done
+  span.addEventListener("click", () => {
+    li.classList.toggle("done");
+    saveList();
   });
 
-  // ❌ DELETE
-  deleteBtn.addEventListener("click", () => {
+  // Delete item
+  delBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
     li.remove();
+    saveList();
   });
-
-  buttons.appendChild(editBtn);
-  buttons.appendChild(deleteBtn);
 
   li.appendChild(span);
-  li.appendChild(buttons);
+  li.appendChild(delBtn);
+
+  if (done) li.classList.add("done");
 
   list.prepend(li);
+  saveList();
 }
 
-button.addEventListener("click", () => {
-  if (!input.value.trim()) return;
-  createItem(input.value.trim());
+/* ---------- ADD ITEM ---------- */
+function addItem() {
+  const text = input.value.trim();
+  if (!text) return;
+
+  createItem(text);
   input.value = "";
-});
+  }
+
+button.addEventListener("click", addItem);
 
 input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    button.click();
-  }
+  if (e.key === "Enter") addItem();
 });
+
+/* ---------- LOAD SAVED ITEMS ---------- */
+const saved = JSON.parse(localStorage.getItem("shoppingList")) || [];
+
+saved.forEach(item => {
+  createItem(item.text, item.done);
+});
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+
