@@ -2,16 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#6f8fdc" />
+
   <title>Shopping List</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="app">
     <h1>🛒 Shopping List</h1>
 
-    <input id="itemInput" type="text" placeholder="Add an item..." />
-    <button id="addBtn">Add</button>
+    <form id="itemForm">
+      <input
+        id="itemInput"
+        type="text"
+        placeholder="Add an item..."
+        autocomplete="off"
+      />
+      <button type="submit">Add</button>
+    </form>
 
     <ul id="list"></ul>
   </div>
