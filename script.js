@@ -9,7 +9,7 @@ function addItem(text) {
   span.textContent = text;
 
   const del = document.createElement("button");
-  del.textContent = "✕";
+  del.textContent = "";
   del.className = "delete-btn";
 
   span.addEventListener("click", () => {
@@ -35,3 +35,4 @@ form.addEventListener("submit", (e) => {
   addItem(text);
   input.value = "";
 });
+
