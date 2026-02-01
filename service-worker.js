@@ -1,4 +1,4 @@
-const CACHE_NAME = "shopping-list-v1";
+const CACHE_NAME = "「 ✦ 𝕃𝕚𝕤𝕥𝕠𝕣𝕖 ✦ 」-v1";
 
 const FILES = [
   "./",
@@ -19,3 +19,4 @@ self.addEventListener("fetch", (e) => {
     caches.match(e.request).then(res => res || fetch(e.request))
   );
 });
+
