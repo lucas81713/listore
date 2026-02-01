@@ -1,6 +1,6 @@
 {
-  "name": "Shopping List",
-  "short_name": "Shopping",
+  "name": "「 ✦ 𝕃𝕚𝕤𝕥𝕠𝕣𝕖 ✦ 」",
+  "short_name": "𝕃𝕚𝕤𝕥𝕠𝕣𝕖",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#6b8ee6",
@@ -13,3 +13,4 @@
     }
   ]
 }
+
