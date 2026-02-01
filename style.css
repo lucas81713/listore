@@ -12,12 +12,14 @@ html, body {
 
 /* ⬇️ IMPORTANT CHANGE HERE */
 body {
-  padding-top: calc(env(safe-area-inset-top) + 40px);
-  padding-bottom: env(safe-area-inset-bottom);
+  margin: 0;
+  min-height: 100vh;
 
   display: flex;
-  justify-content: center;   /* CENTER LEFT ↔ RIGHT */
-  align-items: flex-start;   /* TOP ↕ NOT CENTER */
+  justify-content: center;
+  align-items: center;
+
+  background-color: #7391d9;
 }
 
 .app {
@@ -100,4 +102,5 @@ li span.done {
 .delete-btn:active {
   transform: scale(0.9);
 }
+
 
