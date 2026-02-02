@@ -53,7 +53,7 @@ button {
   font-size: 16px;
   border-radius: 10px;
   border: none;
-  background: #dbbdf0;
+  background: #cb8df7;
   color: white;
   cursor: pointer;
 }
@@ -102,6 +102,7 @@ li span.done {
 .delete-btn:active {
   transform: scale(0.9);
 }
+
 
 
 
