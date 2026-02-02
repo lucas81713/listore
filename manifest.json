@@ -1,11 +1,11 @@
 {
   "name": "𝕃𝕚𝕤𝕥𝕠𝕣𝕖",
   "short_name": "𝕃𝕚𝕤𝕥𝕠𝕣𝕖",
-  "start_url": "/shopping-list-app/",
-  "scope": "/shopping-list-app/",
+  "start_url": "/listore/",
+  "scope": "/listore/",
   "display": "standalone",
-  "background_color": "#7391d9",
-  "theme_color": "#7391d9",
+  "background_color": "#ddb3e3",
+  "theme_color": "#ddb3e3",
   "icons": [
     {
       "src": "icon-192.png",
@@ -19,3 +19,4 @@
     }
   ]
 }
+
