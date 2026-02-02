@@ -19,7 +19,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  background-color: #dbbdf0;
+  background-color: #ddb3e3;
 }
 
 .app {
@@ -102,6 +102,7 @@ li span.done {
 .delete-btn:active {
   transform: scale(0.9);
 }
+
 
 
 
