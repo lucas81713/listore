@@ -19,7 +19,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  background-color: #cb8df7;
+  background-color: #dbbdf0;
 }
 
 .app {
@@ -53,7 +53,7 @@ button {
   font-size: 16px;
   border-radius: 10px;
   border: none;
-  background: #cb8df7;
+  background: #dbbdf0;
   color: white;
   cursor: pointer;
 }
@@ -89,7 +89,7 @@ li span.done {
 }
 
 .delete-btn {
-  background: #ef4444;
+  background: #cf5151;
   color: white;
   border: none;
   width: 36px;
@@ -102,6 +102,7 @@ li span.done {
 .delete-btn:active {
   transform: scale(0.9);
 }
+
 
 
 
