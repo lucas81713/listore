@@ -8,18 +8,32 @@
   <link rel="stylesheet" href="style.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 
 <body>
 
   <div class="app">
 
+    <!-- TOP NAVIGATION -->
     <nav class="top-nav">
-      <button class="nav-btn active" id="homeTab">HOME</button>
-      <button class="nav-btn" id="listoreTab">LISTORE</button>
+
+      <button class="nav-btn active" id="homeTab">
+        HOME
+      </button>
+
+      <button class="nav-btn" id="listoreTab">
+        LISTORE
+      </button>
+
+      <button class="nav-btn" id="scanTab">
+        SCAN QR
+      </button>
+
     </nav>
 
-    <!-- HOME -->
+
+    <!-- HOME PAGE -->
     <section id="homePage" class="page active-page">
 
       <div class="home-header">
@@ -27,6 +41,8 @@
         <span>SYSTEM ONLINE</span>
       </div>
 
+
+      <!-- ORBITAL CLOCK -->
       <div class="clock-container">
 
         <div class="orbit orbit-minutes">
@@ -38,50 +54,97 @@
         </div>
 
         <div class="clock-center">
-          <div id="time">00:00:00</div>
-          <div id="ampm">AM</div>
+
+          <div id="time">
+            00:00:00
+          </div>
+
+          <div id="ampm">
+            AM
+          </div>
+
         </div>
 
       </div>
 
-      <div class="date-display" id="date">Loading...</div>
 
+      <div class="date-display" id="date">
+        Loading...
+      </div>
+
+
+      <!-- WEATHER -->
       <div class="weather-card">
-        <div class="weather-icon" id="weatherIcon">☁</div>
+
+        <div class="weather-icon" id="weatherIcon">
+          ☁
+        </div>
 
         <div class="weather-info">
-          <div class="weather-title">WEATHER</div>
-          <div class="weather-temp" id="weatherTemp">--°</div>
+
+          <div class="weather-title">
+            WEATHER
+          </div>
+
+          <div class="weather-temp" id="weatherTemp">
+            --°
+          </div>
+
           <div class="weather-description" id="weatherDescription">
             Loading weather...
           </div>
+
         </div>
+
       </div>
 
     </section>
 
 
-    <!-- LISTORE -->
+    <!-- LISTORE PAGE -->
     <section id="listorePage" class="page">
 
       <!-- LIST MANAGER -->
       <div id="listsView">
 
         <div class="section-header">
+
           <div>
-            <div class="section-label">LISTORE</div>
-            <h2>MY LISTS</h2>
+
+            <div class="section-label">
+              LISTORE
+            </div>
+
+            <h2>
+              MY LISTS
+            </h2>
+
           </div>
 
-          <button class="add-list-btn" id="newListBtn">+</button>
+          <button class="add-list-btn" id="newListBtn">
+            +
+          </button>
+
         </div>
+
 
         <div id="listsContainer"></div>
 
+
         <div id="emptyLists" class="empty-state">
-          <div class="empty-icon">＋</div>
-          <div>NO LISTS FOUND</div>
-          <small>Create a list to get started.</small>
+
+          <div class="empty-icon">
+            ＋
+          </div>
+
+          <div>
+            NO LISTS FOUND
+          </div>
+
+          <small>
+            Create a list to get started.
+          </small>
+
         </div>
 
       </div>
@@ -92,16 +155,28 @@
 
         <div class="list-topbar">
 
-          <button class="back-btn" id="backToLists">‹</button>
+          <button class="back-btn" id="backToLists">
+            ‹
+          </button>
 
           <div class="current-list-title">
-            <div class="section-label">LIST</div>
-            <h2 id="currentListName">My List</h2>
+
+            <div class="section-label">
+              LIST
+            </div>
+
+            <h2 id="currentListName">
+              My List
+            </h2>
+
           </div>
 
-          <button class="share-btn" id="shareListBtn">QR</button>
+          <button class="share-btn" id="shareListBtn">
+            QR
+          </button>
 
         </div>
+
 
         <form id="listForm">
 
@@ -111,16 +186,92 @@
             autocomplete="off"
           >
 
-          <button type="submit">ADD</button>
+          <button type="submit">
+            ADD
+          </button>
 
         </form>
 
+
         <ul id="list"></ul>
 
+
         <div id="emptyItems" class="empty-state item-empty">
-          <div class="empty-icon">◇</div>
-          <div>LIST IS EMPTY</div>
-          <small>Add something above.</small>
+
+          <div class="empty-icon">
+            ◇
+          </div>
+
+          <div>
+            LIST IS EMPTY
+          </div>
+
+          <small>
+            Add something above.
+          </small>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SCAN QR PAGE -->
+    <section id="scanPage" class="page">
+
+      <div class="scanner-page">
+
+        <div class="scanner-header">
+
+          <div class="section-label">
+            LISTORE CONNECT
+          </div>
+
+          <h2>
+            SCAN QR
+          </h2>
+
+          <p>
+            Scan a Listore QR code to import a copy of someone's list.
+          </p>
+
+        </div>
+
+
+        <div class="scanner-box">
+
+          <div id="qr-reader"></div>
+
+        </div>
+
+
+        <div class="scanner-status" id="scannerStatus">
+          CAMERA READY
+        </div>
+
+
+        <button class="scanner-start-btn" id="startScannerBtn">
+          START CAMERA
+        </button>
+
+
+        <button class="scanner-stop-btn hidden" id="stopScannerBtn">
+          STOP CAMERA
+        </button>
+
+
+        <div class="scanner-info">
+
+          <div class="scanner-info-icon">
+            ⌁
+          </div>
+
+          <div>
+            Point your camera at a Listore QR code.
+            The list will automatically be imported when recognized.
+          </div>
+
         </div>
 
       </div>
@@ -134,13 +285,25 @@
       <div class="modal-box">
 
         <div class="modal-header">
+
           <div>
-            <div class="section-label">NEW LIST</div>
-            <h2>CREATE LIST</h2>
+
+            <div class="section-label">
+              NEW LIST
+            </div>
+
+            <h2>
+              CREATE LIST
+            </h2>
+
           </div>
 
-          <button class="close-btn" id="closeCreateModal">×</button>
+          <button class="close-btn" id="closeCreateModal">
+            ×
+          </button>
+
         </div>
+
 
         <input
           id="newListName"
@@ -150,9 +313,17 @@
           autocomplete="off"
         >
 
+
         <div class="modal-actions">
-          <button class="cancel-btn" id="cancelCreate">CANCEL</button>
-          <button class="confirm-btn" id="confirmCreate">CREATE</button>
+
+          <button class="cancel-btn" id="cancelCreate">
+            CANCEL
+          </button>
+
+          <button class="confirm-btn" id="confirmCreate">
+            CREATE
+          </button>
+
         </div>
 
       </div>
@@ -166,13 +337,25 @@
       <div class="modal-box">
 
         <div class="modal-header">
+
           <div>
-            <div class="section-label">LIST SETTINGS</div>
-            <h2>RENAME LIST</h2>
+
+            <div class="section-label">
+              LIST SETTINGS
+            </div>
+
+            <h2>
+              RENAME LIST
+            </h2>
+
           </div>
 
-          <button class="close-btn" id="closeRenameModal">×</button>
+          <button class="close-btn" id="closeRenameModal">
+            ×
+          </button>
+
         </div>
+
 
         <input
           id="renameListInput"
@@ -182,9 +365,17 @@
           autocomplete="off"
         >
 
+
         <div class="modal-actions">
-          <button class="cancel-btn" id="cancelRename">CANCEL</button>
-          <button class="confirm-btn" id="confirmRename">SAVE</button>
+
+          <button class="cancel-btn" id="cancelRename">
+            CANCEL
+          </button>
+
+          <button class="confirm-btn" id="confirmRename">
+            SAVE
+          </button>
+
         </div>
 
       </div>
@@ -198,23 +389,38 @@
       <div class="modal-box qr-box">
 
         <div class="modal-header">
+
           <div>
-            <div class="section-label">LISTORE SHARE</div>
-            <h2>SHARE LIST</h2>
+
+            <div class="section-label">
+              LISTORE SHARE
+            </div>
+
+            <h2>
+              SHARE LIST
+            </h2>
+
           </div>
 
-          <button class="close-btn" id="closeQrModal">×</button>
+          <button class="close-btn" id="closeQrModal">
+            ×
+          </button>
+
         </div>
+
 
         <div class="qr-list-name" id="qrListName">
           My List
         </div>
 
+
         <div id="qrcode"></div>
 
+
         <p class="qr-instruction">
-          Scan this QR code with another device to import a copy of this list.
+          Scan this QR code with the Listore scanner to import a copy of this list.
         </p>
+
 
         <button class="copy-share-btn" id="copyShareLink">
           COPY SHARE LINK
