@@ -14,50 +14,107 @@ const emptyLists = document.getElementById("emptyLists");
 
 const newListBtn = document.getElementById("newListBtn");
 
-const createListModal = document.getElementById("createListModal");
-const closeCreateModal = document.getElementById("closeCreateModal");
-const cancelCreate = document.getElementById("cancelCreate");
-const confirmCreate = document.getElementById("confirmCreate");
-const newListName = document.getElementById("newListName");
+const createListModal =
+  document.getElementById("createListModal");
 
-const renameListModal = document.getElementById("renameListModal");
-const closeRenameModal = document.getElementById("closeRenameModal");
-const cancelRename = document.getElementById("cancelRename");
-const confirmRename = document.getElementById("confirmRename");
-const renameListInput = document.getElementById("renameListInput");
+const closeCreateModal =
+  document.getElementById("closeCreateModal");
 
-const backToLists = document.getElementById("backToLists");
-const currentListName = document.getElementById("currentListName");
+const cancelCreate =
+  document.getElementById("cancelCreate");
 
-const form = document.getElementById("listForm");
-const input = document.getElementById("itemInput");
-const list = document.getElementById("list");
-const emptyItems = document.getElementById("emptyItems");
+const confirmCreate =
+  document.getElementById("confirmCreate");
 
-const shareListBtn = document.getElementById("shareListBtn");
+const newListName =
+  document.getElementById("newListName");
 
-const qrModal = document.getElementById("qrModal");
-const closeQrModal = document.getElementById("closeQrModal");
-const qrListName = document.getElementById("qrListName");
-const qrCode = document.getElementById("qrcode");
-const copyShareLink = document.getElementById("copyShareLink");
+const renameListModal =
+  document.getElementById("renameListModal");
 
-const qrReader = document.getElementById("qr-reader");
-const scannerStatus = document.getElementById("scannerStatus");
-const startScannerBtn = document.getElementById("startScannerBtn");
-const stopScannerBtn = document.getElementById("stopScannerBtn");
+const closeRenameModal =
+  document.getElementById("closeRenameModal");
+
+const cancelRename =
+  document.getElementById("cancelRename");
+
+const confirmRename =
+  document.getElementById("confirmRename");
+
+const renameListInput =
+  document.getElementById("renameListInput");
+
+const backToLists =
+  document.getElementById("backToLists");
+
+const currentListName =
+  document.getElementById("currentListName");
+
+const form =
+  document.getElementById("listForm");
+
+const input =
+  document.getElementById("itemInput");
+
+const list =
+  document.getElementById("list");
+
+const emptyItems =
+  document.getElementById("emptyItems");
+
+const shareListBtn =
+  document.getElementById("shareListBtn");
+
+const qrModal =
+  document.getElementById("qrModal");
+
+const closeQrModal =
+  document.getElementById("closeQrModal");
+
+const qrListName =
+  document.getElementById("qrListName");
+
+const qrCode =
+  document.getElementById("qrcode");
+
+const copyShareLink =
+  document.getElementById("copyShareLink");
+
+const minutePlanet =
+  document.getElementById("minutePlanet");
+
+const secondPlanet =
+  document.getElementById("secondPlanet");
+
+const qrReader =
+  document.getElementById("qr-reader");
+
+const scannerStatus =
+  document.getElementById("scannerStatus");
+
+const startScannerBtn =
+  document.getElementById("startScannerBtn");
+
+const stopScannerBtn =
+  document.getElementById("stopScannerBtn");
 
 
 /* ---------- DATA ---------- */
 
 let lists = [];
+
 let currentListId = null;
+
 let renameTargetId = null;
 
 let qrScanner = null;
+
 let scannerRunning = false;
 
+let scanLocked = false;
+
 const LISTS_STORAGE_KEY = "listoreLists";
+
 const OLD_STORAGE_KEY = "listoreData";
 
 
@@ -67,7 +124,9 @@ function generateId() {
 
   return (
     Date.now().toString(36) +
-    Math.random().toString(36).substring(2, 8)
+    Math.random()
+      .toString(36)
+      .substring(2, 8)
   );
 
 }
@@ -90,13 +149,17 @@ function saveLists() {
 function loadLists() {
 
   const savedLists =
-    localStorage.getItem(LISTS_STORAGE_KEY);
+    localStorage.getItem(
+      LISTS_STORAGE_KEY
+    );
+
 
   if (savedLists) {
 
     try {
 
-      lists = JSON.parse(savedLists);
+      lists =
+        JSON.parse(savedLists);
 
     } catch {
 
@@ -107,7 +170,10 @@ function loadLists() {
   } else {
 
     const oldData =
-      localStorage.getItem(OLD_STORAGE_KEY);
+      localStorage.getItem(
+        OLD_STORAGE_KEY
+      );
+
 
     if (oldData) {
 
@@ -116,12 +182,18 @@ function loadLists() {
         const oldItems =
           JSON.parse(oldData);
 
+
         lists = [
+
           {
             id: generateId(),
+
             name: "My List",
+
             items: oldItems
+
           }
+
         ];
 
       } catch {
@@ -136,6 +208,7 @@ function loadLists() {
 
     }
 
+
     saveLists();
 
   }
@@ -143,25 +216,45 @@ function loadLists() {
 }
 
 
-/* ---------- PAGE NAVIGATION ---------- */
+/* ---------- NAVIGATION ---------- */
 
 function setActiveTab(tab) {
 
-  homeTab.classList.remove("active");
-  listoreTab.classList.remove("active");
-  scanTab.classList.remove("active");
+  homeTab.classList.remove(
+    "active"
+  );
 
-  tab.classList.add("active");
+  listoreTab.classList.remove(
+    "active"
+  );
+
+  scanTab.classList.remove(
+    "active"
+  );
+
+  tab.classList.add(
+    "active"
+  );
 
 }
+
 
 function hidePages() {
 
-  homePage.classList.remove("active-page");
-  listorePage.classList.remove("active-page");
-  scanPage.classList.remove("active-page");
+  homePage.classList.remove(
+    "active-page"
+  );
+
+  listorePage.classList.remove(
+    "active-page"
+  );
+
+  scanPage.classList.remove(
+    "active-page"
+  );
 
 }
+
 
 function showHome() {
 
@@ -171,9 +264,12 @@ function showHome() {
 
   hidePages();
 
-  homePage.classList.add("active-page");
+  homePage.classList.add(
+    "active-page"
+  );
 
 }
+
 
 function showListore() {
 
@@ -183,11 +279,14 @@ function showListore() {
 
   hidePages();
 
-  listorePage.classList.add("active-page");
+  listorePage.classList.add(
+    "active-page"
+  );
 
   showLists();
 
 }
+
 
 function showScanner() {
 
@@ -195,22 +294,43 @@ function showScanner() {
 
   hidePages();
 
-  scanPage.classList.add("active-page");
+  scanPage.classList.add(
+    "active-page"
+  );
+
+  scannerStatus.textContent =
+    "READY TO SCAN";
 
 }
 
-homeTab.addEventListener("click", showHome);
-listoreTab.addEventListener("click", showListore);
-scanTab.addEventListener("click", showScanner);
+
+homeTab.addEventListener(
+  "click",
+  showHome
+);
+
+listoreTab.addEventListener(
+  "click",
+  showListore
+);
+
+scanTab.addEventListener(
+  "click",
+  showScanner
+);
 
 
-/* ---------- LIST MANAGER ---------- */
+/* ---------- LISTS ---------- */
 
 function showLists() {
 
-  listsView.classList.remove("hidden");
+  listsView.classList.remove(
+    "hidden"
+  );
 
-  singleListView.classList.add("hidden");
+  singleListView.classList.add(
+    "hidden"
+  );
 
   renderLists();
 
@@ -221,149 +341,175 @@ function renderLists() {
 
   listsContainer.innerHTML = "";
 
+
   emptyLists.classList.toggle(
     "hidden",
     lists.length !== 0
   );
 
-  lists.forEach(currentList => {
 
-    const card =
-      document.createElement("div");
+  lists.forEach(
+    currentList => {
 
-    card.className = "list-card";
-
-
-    const main =
-      document.createElement("div");
-
-    main.className = "list-card-main";
-
-
-    const info =
-      document.createElement("div");
-
-
-    const name =
-      document.createElement("div");
-
-    name.className = "list-card-name";
-
-    name.textContent =
-      currentList.name;
-
-
-    const count =
-      document.createElement("div");
-
-    count.className =
-      "list-card-count";
-
-
-    const total =
-      currentList.items.length;
-
-    const completed =
-      currentList.items.filter(
-        item => item.done
-      ).length;
-
-
-    count.textContent =
-      `${total} ITEM${total === 1 ? "" : "S"} • ${completed} COMPLETE`;
-
-
-    info.appendChild(name);
-    info.appendChild(count);
-
-
-    const actions =
-      document.createElement("div");
-
-    actions.className =
-      "list-card-actions";
-
-
-    const renameButton =
-      document.createElement("button");
-
-    renameButton.className =
-      "card-action";
-
-    renameButton.textContent =
-      "✎";
-
-    renameButton.title =
-      "Rename";
-
-
-    renameButton.addEventListener(
-      "click",
-      e => {
-
-        e.stopPropagation();
-
-        openRenameModal(
-          currentList.id
+      const card =
+        document.createElement(
+          "div"
         );
 
-      }
-    );
+      card.className =
+        "list-card";
 
 
-    const deleteButton =
-      document.createElement("button");
-
-    deleteButton.className =
-      "card-action card-delete";
-
-    deleteButton.textContent =
-      "×";
-
-    deleteButton.title =
-      "Delete";
-
-
-    deleteButton.addEventListener(
-      "click",
-      e => {
-
-        e.stopPropagation();
-
-        deleteList(
-          currentList.id
+      const main =
+        document.createElement(
+          "div"
         );
 
-      }
-    );
+      main.className =
+        "list-card-main";
 
 
-    actions.appendChild(renameButton);
-    actions.appendChild(deleteButton);
-
-
-    main.appendChild(info);
-    main.appendChild(actions);
-
-
-    card.appendChild(main);
-
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openList(
-          currentList.id
+      const info =
+        document.createElement(
+          "div"
         );
 
-      }
-    );
+
+      const name =
+        document.createElement(
+          "div"
+        );
+
+      name.className =
+        "list-card-name";
+
+      name.textContent =
+        currentList.name;
 
 
-    listsContainer.appendChild(card);
+      const count =
+        document.createElement(
+          "div"
+        );
 
-  });
+      count.className =
+        "list-card-count";
+
+
+      const total =
+        currentList.items.length;
+
+
+      const completed =
+        currentList.items.filter(
+          item => item.done
+        ).length;
+
+
+      count.textContent =
+        `${total} ITEM${total === 1 ? "" : "S"} • ${completed} COMPLETE`;
+
+
+      info.appendChild(name);
+
+      info.appendChild(count);
+
+
+      const actions =
+        document.createElement(
+          "div"
+        );
+
+      actions.className =
+        "list-card-actions";
+
+
+      const renameButton =
+        document.createElement(
+          "button"
+        );
+
+      renameButton.className =
+        "card-action";
+
+      renameButton.textContent =
+        "✎";
+
+
+      renameButton.addEventListener(
+        "click",
+        event => {
+
+          event.stopPropagation();
+
+          openRenameModal(
+            currentList.id
+          );
+
+        }
+      );
+
+
+      const deleteButton =
+        document.createElement(
+          "button"
+        );
+
+      deleteButton.className =
+        "card-action card-delete";
+
+      deleteButton.textContent =
+        "×";
+
+
+      deleteButton.addEventListener(
+        "click",
+        event => {
+
+          event.stopPropagation();
+
+          deleteList(
+            currentList.id
+          );
+
+        }
+      );
+
+
+      actions.appendChild(
+        renameButton
+      );
+
+      actions.appendChild(
+        deleteButton
+      );
+
+
+      main.appendChild(info);
+
+      main.appendChild(actions);
+
+      card.appendChild(main);
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          openList(
+            currentList.id
+          );
+
+        }
+      );
+
+
+      listsContainer.appendChild(
+        card
+      );
+
+    }
+  );
 
 }
 
@@ -395,48 +541,16 @@ function closeCreateListModal() {
 }
 
 
-newListBtn.addEventListener(
-  "click",
-  openCreateModal
-);
-
-closeCreateModal.addEventListener(
-  "click",
-  closeCreateListModal
-);
-
-cancelCreate.addEventListener(
-  "click",
-  closeCreateListModal
-);
-
-confirmCreate.addEventListener(
-  "click",
-  createList
-);
-
-
-newListName.addEventListener(
-  "keydown",
-  e => {
-
-    if (e.key === "Enter") {
-
-      createList();
-
-    }
-
-  }
-);
-
-
 function createList() {
 
   const name =
     newListName.value.trim();
 
+
   if (!name) {
+
     return;
+
   }
 
 
@@ -459,12 +573,48 @@ function createList() {
 
   renderLists();
 
-  openList(newList.id);
+  openList(
+    newList.id
+  );
 
 }
 
 
-/* ---------- DELETE LIST ---------- */
+newListBtn.addEventListener(
+  "click",
+  openCreateModal
+);
+
+closeCreateModal.addEventListener(
+  "click",
+  closeCreateListModal
+);
+
+cancelCreate.addEventListener(
+  "click",
+  closeCreateListModal
+);
+
+confirmCreate.addEventListener(
+  "click",
+  createList
+);
+
+newListName.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key === "Enter") {
+
+      createList();
+
+    }
+
+  }
+);
+
+
+/* ---------- DELETE ---------- */
 
 function deleteList(id) {
 
@@ -473,19 +623,22 @@ function deleteList(id) {
       item => item.id === id
     );
 
+
   if (!target) {
+
     return;
+
   }
 
 
-  const confirmed =
-    confirm(
+  if (
+    !confirm(
       `Delete "${target.name}"? This cannot be undone.`
-    );
+    )
+  ) {
 
-
-  if (!confirmed) {
     return;
+
   }
 
 
@@ -511,8 +664,11 @@ function openRenameModal(id) {
       item => item.id === id
     );
 
+
   if (!target) {
+
     return;
+
   }
 
 
@@ -552,58 +708,37 @@ function closeRenameListModal() {
 }
 
 
-closeRenameModal.addEventListener(
-  "click",
-  closeRenameListModal
-);
-
-cancelRename.addEventListener(
-  "click",
-  closeRenameListModal
-);
-
-confirmRename.addEventListener(
-  "click",
-  renameList
-);
-
-
-renameListInput.addEventListener(
-  "keydown",
-  e => {
-
-    if (e.key === "Enter") {
-
-      renameList();
-
-    }
-
-  }
-);
-
-
 function renameList() {
 
   if (!renameTargetId) {
+
     return;
+
   }
 
 
   const name =
     renameListInput.value.trim();
 
+
   if (!name) {
+
     return;
+
   }
 
 
   const target =
     lists.find(
-      item => item.id === renameTargetId
+      item =>
+        item.id === renameTargetId
     );
 
+
   if (!target) {
+
     return;
+
   }
 
 
@@ -628,6 +763,35 @@ function renameList() {
 }
 
 
+closeRenameModal.addEventListener(
+  "click",
+  closeRenameListModal
+);
+
+cancelRename.addEventListener(
+  "click",
+  closeRenameListModal
+);
+
+confirmRename.addEventListener(
+  "click",
+  renameList
+);
+
+renameListInput.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.key === "Enter") {
+
+      renameList();
+
+    }
+
+  }
+);
+
+
 /* ---------- OPEN LIST ---------- */
 
 function openList(id) {
@@ -637,8 +801,11 @@ function openList(id) {
       item => item.id === id
     );
 
+
   if (!target) {
+
     return;
+
   }
 
 
@@ -663,15 +830,28 @@ function openList(id) {
 }
 
 
-/* ---------- RENDER ITEMS ---------- */
+/* ---------- ITEMS ---------- */
+
+function getCurrentList() {
+
+  return lists.find(
+    item =>
+      item.id === currentListId
+  );
+
+}
+
 
 function renderItems() {
 
   const target =
     getCurrentList();
 
+
   if (!target) {
+
     return;
+
   }
 
 
@@ -685,22 +865,26 @@ function renderItems() {
 
 
   target.items.forEach(
-    item => createItemElement(item)
+    item =>
+      createItemElement(item)
   );
 
 }
 
 
-/* ---------- ITEM ELEMENT ---------- */
-
 function createItemElement(item) {
 
   const li =
-    document.createElement("li");
+    document.createElement(
+      "li"
+    );
 
 
   const span =
-    document.createElement("span");
+    document.createElement(
+      "span"
+    );
+
 
   span.textContent =
     item.text;
@@ -708,7 +892,9 @@ function createItemElement(item) {
 
   if (item.done) {
 
-    span.classList.add("done");
+    span.classList.add(
+      "done"
+    );
 
   }
 
@@ -731,7 +917,10 @@ function createItemElement(item) {
 
 
   const del =
-    document.createElement("button");
+    document.createElement(
+      "button"
+    );
+
 
   del.textContent =
     "✕";
@@ -742,16 +931,19 @@ function createItemElement(item) {
 
   del.addEventListener(
     "click",
-    e => {
+    event => {
 
-      e.stopPropagation();
+      event.stopPropagation();
 
 
       const target =
         getCurrentList();
 
+
       if (!target) {
+
         return;
+
       }
 
 
@@ -779,28 +971,32 @@ function createItemElement(item) {
 }
 
 
-/* ---------- ADD ITEM ---------- */
-
 form.addEventListener(
   "submit",
-  e => {
+  event => {
 
-    e.preventDefault();
+    event.preventDefault();
 
 
     const text =
       input.value.trim();
 
+
     if (!text) {
+
       return;
+
     }
 
 
     const target =
       getCurrentList();
 
+
     if (!target) {
+
       return;
+
     }
 
 
@@ -815,7 +1011,6 @@ form.addEventListener(
 
     saveLists();
 
-
     input.value = "";
 
     renderItems();
@@ -825,8 +1020,6 @@ form.addEventListener(
   }
 );
 
-
-/* ---------- BACK ---------- */
 
 backToLists.addEventListener(
   "click",
@@ -840,19 +1033,7 @@ backToLists.addEventListener(
 );
 
 
-/* ---------- CURRENT LIST ---------- */
-
-function getCurrentList() {
-
-  return lists.find(
-    currentList =>
-      currentList.id === currentListId
-  );
-
-}
-
-
-/* ---------- QR ENCODING ---------- */
+/* ---------- QR DATA ---------- */
 
 function encodeList(listData) {
 
@@ -860,51 +1041,47 @@ function encodeList(listData) {
     JSON.stringify(listData);
 
 
-  const encoded =
-    btoa(
-      encodeURIComponent(json)
-        .replace(
-          /%([0-9A-F]{2})/g,
-          (match, p1) =>
-            String.fromCharCode(
-              "0x" + p1
-            )
-        )
-    );
-
-
-  return encoded;
+  return btoa(
+    encodeURIComponent(json)
+      .replace(
+        /%([0-9A-F]{2})/g,
+        (match, p1) =>
+          String.fromCharCode(
+            parseInt(p1, 16)
+          )
+      )
+  );
 
 }
 
 
 function decodeList(encoded) {
 
-  const json =
-    decodeURIComponent(
+  const binary =
+    atob(encoded);
 
-      Array.prototype.map.call(
-        atob(encoded),
 
-        c =>
+  const percentEncoded =
+    Array.from(binary)
+      .map(
+        character =>
           "%" +
-          (
-            "00" +
-            c.charCodeAt(0)
-              .toString(16)
-          ).slice(-2)
-
-      ).join("")
-
-    );
+          character
+            .charCodeAt(0)
+            .toString(16)
+            .padStart(2, "0")
+      )
+      .join("");
 
 
-  return JSON.parse(json);
+  return JSON.parse(
+    decodeURIComponent(
+      percentEncoded
+    )
+  );
 
 }
 
-
-/* ---------- SHARE LINK ---------- */
 
 function getShareLink(target) {
 
@@ -918,13 +1095,11 @@ function getShareLink(target) {
     });
 
 
-  const baseUrl =
-    window.location.origin +
-    window.location.pathname;
-
-
   return (
-    `${baseUrl}#share=${encodeURIComponent(encoded)}`
+    window.location.origin +
+    window.location.pathname +
+    "#share=" +
+    encodeURIComponent(encoded)
   );
 
 }
@@ -939,8 +1114,11 @@ shareListBtn.addEventListener(
     const target =
       getCurrentList();
 
+
     if (!target) {
+
       return;
+
     }
 
 
@@ -951,15 +1129,29 @@ shareListBtn.addEventListener(
     qrCode.innerHTML = "";
 
 
-    const shareLink =
+    const link =
       getShareLink(target);
+
+
+    if (
+      typeof QRCode ===
+      "undefined"
+    ) {
+
+      alert(
+        "QR code generator could not load. Please check your internet connection."
+      );
+
+      return;
+
+    }
 
 
     new QRCode(
       qrCode,
       {
 
-        text: shareLink,
+        text: link,
 
         width: 200,
 
@@ -984,8 +1176,6 @@ shareListBtn.addEventListener(
 );
 
 
-/* ---------- CLOSE QR ---------- */
-
 closeQrModal.addEventListener(
   "click",
   () => {
@@ -998,7 +1188,7 @@ closeQrModal.addEventListener(
 );
 
 
-/* ---------- COPY LINK ---------- */
+/* ---------- COPY QR LINK ---------- */
 
 copyShareLink.addEventListener(
   "click",
@@ -1007,8 +1197,11 @@ copyShareLink.addEventListener(
     const target =
       getCurrentList();
 
+
     if (!target) {
+
       return;
+
     }
 
 
@@ -1036,11 +1229,10 @@ copyShareLink.addEventListener(
         1500
       );
 
-
     } catch {
 
       prompt(
-        "Copy this share link:",
+        "Copy this link:",
         link
       );
 
@@ -1050,7 +1242,7 @@ copyShareLink.addEventListener(
 );
 
 
-/* ---------- IMPORT SHARED LIST ---------- */
+/* ---------- IMPORT HASH ---------- */
 
 function importSharedListFromHash() {
 
@@ -1059,260 +1251,10 @@ function importSharedListFromHash() {
 
 
   if (
-    !hash.startsWith("#share=")
+    !hash.startsWith(
+      "#share="
+    )
   ) {
-
-    return false;
-
-  }
-
-
-  try {
-
-    const encoded =
-      decodeURIComponent(
-        hash.substring(7)
-      );
-
-
-    const sharedList =
-      decodeList(encoded);
-
-
-    if (
-      !sharedList ||
-      typeof sharedList.name !== "string" ||
-      !Array.isArray(sharedList.items)
-    ) {
-
-      return false;
-
-    }
-
-
-    const alreadyImported =
-      lists.some(
-        item =>
-          item.name === sharedList.name &&
-          JSON.stringify(item.items) ===
-          JSON.stringify(sharedList.items)
-      );
-
-
-    if (alreadyImported) {
-
-      alert(
-        `"${sharedList.name}" is already in your Listore.`
-      );
-
-    } else {
-
-      const importedList = {
-
-        id: generateId(),
-
-        name: sharedList.name,
-
-        items: sharedList.items
-
-      };
-
-
-      lists.push(importedList);
-
-      saveLists();
-
-
-      showListore();
-
-      openList(
-        importedList.id
-      );
-
-
-      alert(
-        `"${importedList.name}" has been imported into your Listore!`
-      );
-
-    }
-
-
-    window.history.replaceState(
-      null,
-      "",
-      window.location.pathname
-    );
-
-
-    return true;
-
-
-  } catch (error) {
-
-    console.error(
-      "Could not import shared list:",
-      error
-    );
-
-
-    return false;
-
-  }
-
-}
-
-
-/* ---------- QR SCANNER ---------- */
-
-function startScanner() {
-
-  if (scannerRunning) {
-    return;
-  }
-
-
-  if (
-    typeof Html5Qrcode ===
-    "undefined"
-  ) {
-
-    scannerStatus.textContent =
-      "SCANNER LIBRARY FAILED TO LOAD";
-
-    return;
-
-  }
-
-
-  qrScanner =
-    new Html5Qrcode(
-      "qr-reader"
-    );
-
-
-  scannerStatus.textContent =
-    "REQUESTING CAMERA...";
-
-
-  qrScanner.start(
-
-    {
-      facingMode: "environment"
-    },
-
-    {
-      fps: 10,
-
-      qrbox: {
-        width: 230,
-        height: 230
-      }
-
-    },
-
-    decodedText => {
-
-      handleScannedQRCode(
-        decodedText
-      );
-
-    },
-
-    errorMessage => {
-
-    }
-
-  )
-  .then(() => {
-
-    scannerRunning = true;
-
-    startScannerBtn.classList.add(
-      "hidden"
-    );
-
-    stopScannerBtn.classList.remove(
-      "hidden"
-    );
-
-    scannerStatus.textContent =
-      "SCANNING — POINT AT A LISTORE QR CODE";
-
-  })
-  .catch(error => {
-
-    console.error(
-      "Camera error:",
-      error
-    );
-
-
-    scannerStatus.textContent =
-      "CAMERA ACCESS FAILED";
-
-  });
-
-}
-
-
-/* ---------- STOP SCANNER ---------- */
-
-function stopScanner() {
-
-  if (
-    !qrScanner ||
-    !scannerRunning
-  ) {
-
-    return;
-
-  }
-
-
-  qrScanner
-    .stop()
-    .then(() => {
-
-      qrScanner.clear();
-
-      scannerRunning = false;
-
-      startScannerBtn.classList.remove(
-        "hidden"
-      );
-
-      stopScannerBtn.classList.add(
-        "hidden"
-      );
-
-      scannerStatus.textContent =
-        "CAMERA READY";
-
-    })
-    .catch(error => {
-
-      console.error(
-        "Could not stop scanner:",
-        error
-      );
-
-      scannerRunning = false;
-
-    });
-
-}
-
-
-/* ---------- SCANNED QR ---------- */
-
-function handleScannedQRCode(decodedText) {
-
-  if (
-    !decodedText.includes("#share=")
-  ) {
-
-    scannerStatus.textContent =
-      "NOT A LISTORE QR CODE";
 
     return;
 
@@ -1320,25 +1262,6 @@ function handleScannedQRCode(decodedText) {
 
 
   try {
-
-    const url =
-      new URL(decodedText);
-
-
-    const hash =
-      url.hash;
-
-
-    if (
-      !hash.startsWith("#share=")
-    ) {
-
-      throw new Error(
-        "Invalid Listore QR"
-      );
-
-    }
-
 
     const encoded =
       decodeURIComponent(
@@ -1363,32 +1286,6 @@ function handleScannedQRCode(decodedText) {
     }
 
 
-    const alreadyImported =
-      lists.some(
-        item =>
-          item.name === sharedList.name &&
-          JSON.stringify(item.items) ===
-          JSON.stringify(sharedList.items)
-      );
-
-
-    if (alreadyImported) {
-
-      scannerStatus.textContent =
-        "LIST ALREADY IMPORTED";
-
-      stopScanner();
-
-      setTimeout(
-        () => showListore(),
-        800
-      );
-
-      return;
-
-    }
-
-
     const importedList = {
 
       id: generateId(),
@@ -1400,13 +1297,412 @@ function handleScannedQRCode(decodedText) {
     };
 
 
-    lists.push(importedList);
+    lists.push(
+      importedList
+    );
+
+
+    saveLists();
+
+
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname
+    );
+
+
+    showListore();
+
+    openList(
+      importedList.id
+    );
+
+
+    alert(
+      `"${importedList.name}" has been imported!`
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Import failed:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   QR SCANNER
+   ========================================================= */
+
+
+/* ---------- START SCANNER ---------- */
+
+async function startScanner() {
+
+  if (scannerRunning) {
+
+    return;
+
+  }
+
+
+  if (
+    typeof Html5Qrcode ===
+    "undefined"
+  ) {
+
+    scannerStatus.textContent =
+      "SCANNER LIBRARY NOT LOADED";
+
+    return;
+
+  }
+
+
+  if (
+    !window.isSecureContext &&
+    location.hostname !== "localhost" &&
+    location.hostname !== "127.0.0.1"
+  ) {
+
+    scannerStatus.textContent =
+      "CAMERA REQUIRES HTTPS";
+
+    alert(
+      "Camera scanning requires HTTPS. Host your Listore site on an HTTPS website such as GitHub Pages."
+    );
+
+    return;
+
+  }
+
+
+  scanLocked = false;
+
+
+  qrReader.innerHTML = "";
+
+
+  qrScanner =
+    new Html5Qrcode(
+      "qr-reader"
+    );
+
+
+  scannerStatus.textContent =
+    "REQUESTING CAMERA...";
+
+
+  try {
+
+    const cameras =
+      await Html5Qrcode.getCameras();
+
+
+    if (
+      !cameras ||
+      cameras.length === 0
+    ) {
+
+      throw new Error(
+        "No camera found"
+      );
+
+    }
+
+
+    let cameraId =
+      cameras[0].id;
+
+
+    const backCamera =
+      cameras.find(
+        camera =>
+          /back|rear|environment/i
+            .test(camera.label)
+      );
+
+
+    if (backCamera) {
+
+      cameraId =
+        backCamera.id;
+
+    }
+
+
+    await qrScanner.start(
+
+      cameraId,
+
+      {
+
+        fps: 10,
+
+        qrbox: {
+          width: 230,
+          height: 230
+        },
+
+        aspectRatio: 1
+
+      },
+
+      decodedText => {
+
+        handleScannedQRCode(
+          decodedText
+        );
+
+      },
+
+      () => {}
+
+    );
+
+
+    scannerRunning = true;
+
+
+    startScannerBtn.classList.add(
+      "hidden"
+    );
+
+
+    stopScannerBtn.classList.remove(
+      "hidden"
+    );
+
+
+    scannerStatus.textContent =
+      "SCANNING — POINT AT A LISTORE QR CODE";
+
+  } catch (error) {
+
+    console.error(
+      "Camera startup error:",
+      error
+    );
+
+
+    scannerStatus.textContent =
+      "CAMERA COULD NOT START";
+
+
+    if (
+      error.name ===
+      "NotAllowedError"
+    ) {
+
+      scannerStatus.textContent =
+        "CAMERA PERMISSION DENIED";
+
+    } else if (
+      error.name ===
+      "NotFoundError"
+    ) {
+
+      scannerStatus.textContent =
+        "NO CAMERA FOUND";
+
+    }
+
+  }
+
+}
+
+
+/* ---------- STOP SCANNER ---------- */
+
+async function stopScanner() {
+
+  if (!qrScanner) {
+
+    return;
+
+  }
+
+
+  try {
+
+    if (scannerRunning) {
+
+      await qrScanner.stop();
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Scanner stop error:",
+      error
+    );
+
+  }
+
+
+  try {
+
+    qrScanner.clear();
+
+  } catch {}
+
+  
+  qrScanner = null;
+
+  scannerRunning = false;
+
+  scanLocked = false;
+
+
+  startScannerBtn.classList.remove(
+    "hidden"
+  );
+
+
+  stopScannerBtn.classList.add(
+    "hidden"
+  );
+
+
+  if (
+    scanPage.classList.contains(
+      "active-page"
+    )
+  ) {
+
+    scannerStatus.textContent =
+      "READY TO SCAN";
+
+  }
+
+}
+
+
+/* ---------- HANDLE SCAN ---------- */
+
+function handleScannedQRCode(decodedText) {
+
+  if (scanLocked) {
+
+    return;
+
+  }
+
+
+  scanLocked = true;
+
+
+  if (
+    !decodedText.includes(
+      "#share="
+    )
+  ) {
+
+    scannerStatus.textContent =
+      "NOT A LISTORE QR CODE";
+
+
+    scanLocked = false;
+
+    return;
+
+  }
+
+
+  try {
+
+    let encoded;
+
+
+    try {
+
+      const url =
+        new URL(decodedText);
+
+      encoded =
+        url.hash.substring(7);
+
+    } catch {
+
+      const hashIndex =
+        decodedText.indexOf(
+          "#share="
+        );
+
+
+      encoded =
+        decodedText.substring(
+          hashIndex + 7
+        );
+
+    }
+
+
+    encoded =
+      decodeURIComponent(
+        encoded
+      );
+
+
+    const sharedList =
+      decodeList(encoded);
+
+
+    if (
+      !sharedList ||
+      typeof sharedList.name !== "string" ||
+      !Array.isArray(sharedList.items)
+    ) {
+
+      throw new Error(
+        "Invalid list"
+      );
+
+    }
+
+
+    const importedList = {
+
+      id: generateId(),
+
+      name: sharedList.name,
+
+      items:
+        sharedList.items.map(
+          item => ({
+
+            text:
+              String(
+                item.text
+              ),
+
+            done:
+              Boolean(
+                item.done
+              )
+
+          })
+        )
+
+    };
+
+
+    lists.push(
+      importedList
+    );
+
 
     saveLists();
 
 
     scannerStatus.textContent =
-      `IMPORTED: ${importedList.name}`;
+      "LIST IMPORTED";
 
 
     stopScanner();
@@ -1422,31 +1718,33 @@ function handleScannedQRCode(decodedText) {
         );
 
       },
-      700
+      500
     );
-
 
   } catch (error) {
 
     console.error(
-      "Invalid QR:",
+      "QR processing error:",
       error
     );
 
+
     scannerStatus.textContent =
-      "INVALID LISTORE QR CODE";
+      "INVALID LISTORE QR";
+
+
+    scanLocked = false;
 
   }
 
 }
 
 
-/* ---------- SCANNER BUTTONS ---------- */
-
 startScannerBtn.addEventListener(
   "click",
   startScanner
 );
+
 
 stopScannerBtn.addEventListener(
   "click",
@@ -1454,7 +1752,68 @@ stopScannerBtn.addEventListener(
 );
 
 
-/* ---------- CLOCK ---------- */
+/* =========================================================
+   CLOCK
+   ========================================================= */
+
+
+/* ---------- UPDATE PLANETS ---------- */
+
+function updatePlanetPositions(now) {
+
+  const minutes =
+    now.getMinutes();
+
+  const seconds =
+    now.getSeconds();
+
+  const milliseconds =
+    now.getMilliseconds();
+
+
+  /*
+    Minute planet:
+    60 minutes = 360 degrees.
+
+    We include seconds and milliseconds so
+    the movement is smooth and accurate.
+  */
+
+  const minuteValue =
+    minutes +
+    seconds / 60 +
+    milliseconds / 60000;
+
+
+  const minuteAngle =
+    minuteValue * 6;
+
+
+  /*
+    Second planet:
+    60 seconds = 360 degrees.
+  */
+
+  const secondValue =
+    seconds +
+    milliseconds / 1000;
+
+
+  const secondAngle =
+    secondValue * 6;
+
+
+  minutePlanet.style.transform =
+    `rotate(${minuteAngle}deg) translateX(102px)`;
+
+
+  secondPlanet.style.transform =
+    `rotate(${secondAngle}deg) translateX(135px)`;
+
+}
+
+
+/* ---------- UPDATE CLOCK ---------- */
 
 function updateClock() {
 
@@ -1489,7 +1848,9 @@ function updateClock() {
 
 
   if (hours === 0) {
+
     hours = 12;
+
   }
 
 
@@ -1528,18 +1889,25 @@ function updateClock() {
       }
     );
 
+
+  updatePlanetPositions(
+    now
+  );
+
 }
 
 
 setInterval(
   updateClock,
-  1000
+  250
 );
 
 updateClock();
 
 
-/* ---------- WEATHER ---------- */
+/* =========================================================
+   WEATHER
+   ========================================================= */
 
 async function loadWeather() {
 
@@ -1565,6 +1933,15 @@ async function loadWeather() {
       await fetch(
         "https://api.open-meteo.com/v1/forecast?latitude=43.8561&longitude=-79.3370&current=temperature_2m,weather_code&temperature_unit=celsius"
       );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Weather request failed"
+      );
+
+    }
 
 
     const data =
@@ -1666,7 +2043,6 @@ async function loadWeather() {
     weatherIcon.textContent =
       icon;
 
-
   } catch {
 
     weatherTemp.textContent =
@@ -1686,7 +2062,9 @@ async function loadWeather() {
 loadWeather();
 
 
-/* ---------- START ---------- */
+/* =========================================================
+   START
+   ========================================================= */
 
 loadLists();
 
