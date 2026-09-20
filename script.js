@@ -2,1854 +2,1087 @@ const STORAGE_KEY = "listoreLists";
 
 let lists = {};
 let currentListId = null;
-let scanner = null;
+let renameListId = null;
+let html5QrCode = null;
 let scannerRunning = false;
 
 
-/* =========================================================
+/* =========================
    STORAGE
-========================================================= */
-
-function loadLists() {
-
-    const saved =
-        localStorage.getItem(STORAGE_KEY);
-
-    if (saved) {
-
-        try {
-
-            lists = JSON.parse(saved);
-
-        } catch {
-
-            lists = {};
-
-        }
-
-    }
-
-
-    if (!Object.keys(lists).length) {
-
-        const oldData =
-            localStorage.getItem("listoreData");
-
-        let oldItems = [];
-
-        if (oldData) {
-
-            try {
-
-                oldItems = JSON.parse(oldData);
-
-            } catch {
-
-                oldItems = [];
-
-            }
-
-        }
-
-
-        lists = {
-
-            myList: {
-
-                name: "My List",
-
-                items: oldItems
-
-            }
-
-        };
-
-        saveLists();
-
-    }
-
-}
-
+========================= */
 
 function saveLists() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(lists));
+}
 
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(lists)
-    );
+function loadLists() {
+    const savedLists = localStorage.getItem(STORAGE_KEY);
 
+    if (savedLists) {
+        try {
+            lists = JSON.parse(savedLists);
+        } catch {
+            lists = {};
+        }
+    }
+
+    /*
+     * Migrate old Listore data if it exists.
+     */
+    if (Object.keys(lists).length === 0) {
+        const oldData = localStorage.getItem("listoreData");
+
+        if (oldData) {
+            try {
+                const oldItems = JSON.parse(oldData);
+
+                lists = {
+                    my_list: {
+                        name: "My List",
+                        items: Array.isArray(oldItems) ? oldItems : []
+                    }
+                };
+
+                saveLists();
+            } catch {
+                lists = {};
+            }
+        }
+    }
 }
 
 
-/* =========================================================
+/* =========================
    NAVIGATION
-========================================================= */
+========================= */
 
-const navButtons =
-    document.querySelectorAll(".nav-button");
+const homeTab = document.getElementById("homeTab");
+const listoreTab = document.getElementById("listoreTab");
+const scanTab = document.getElementById("scanTab");
 
-const pages =
-    document.querySelectorAll(".page");
+const homePage = document.getElementById("homePage");
+const listorePage = document.getElementById("listorePage");
+const scanPage = document.getElementById("scanPage");
 
+function showPage(pageName) {
 
-navButtons.forEach(button => {
+    homePage.classList.remove("active");
+    listorePage.classList.remove("active");
+    scanPage.classList.remove("active");
 
-    button.addEventListener("click", () => {
+    homeTab.classList.remove("active");
+    listoreTab.classList.remove("active");
+    scanTab.classList.remove("active");
 
-        const pageId =
-            button.dataset.page;
+    if (pageName === "home") {
+        homePage.classList.add("active");
+        homeTab.classList.add("active");
+    }
 
+    if (pageName === "listore") {
+        listorePage.classList.add("active");
+        listoreTab.classList.add("active");
+        renderLists();
+    }
 
-        navButtons.forEach(btn => {
+    if (pageName === "scan") {
+        scanPage.classList.add("active");
+        scanTab.classList.add("active");
+    }
+}
 
-            btn.classList.remove("active");
+homeTab.addEventListener("click", () => showPage("home"));
+listoreTab.addEventListener("click", () => showPage("listore"));
 
-        });
-
-
-        pages.forEach(page => {
-
-            page.classList.remove(
-                "active-page"
-            );
-
-        });
-
-
-        button.classList.add("active");
-
-
-        document
-            .getElementById(pageId)
-            .classList.add("active-page");
-
-
-        if (pageId === "scanPage") {
-
-            scannerStatus(
-                "Camera is ready."
-            );
-
-        }
-
-    });
-
+scanTab.addEventListener("click", () => {
+    showPage("scan");
 });
 
 
-/* =========================================================
-   LIST COUNT
-========================================================= */
+/* =========================
+   ANALOG CLOCK
+========================= */
 
-function updateListCount() {
+function updateClock() {
 
-    const count =
-        document.getElementById(
-            "listCount"
-        );
+    const now = new Date();
 
-    if (!count) return;
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
 
-    count.textContent =
-        Object.keys(lists).length;
+    /*
+     * The minute hand moves continuously.
+     *
+     * Example:
+     * 10:30:30
+     * = 30.5 minutes
+     */
+    const minuteValue = minutes + seconds / 60;
 
+    /*
+     * The hour hand also moves continuously.
+     *
+     * Example:
+     * 10:30
+     * = halfway between 10 and 11
+     */
+    const hourValue = (hours % 12) + minutes / 60;
+
+    const minuteAngle = minuteValue * 6;
+    const hourAngle = hourValue * 30;
+
+    const hourHand = document.getElementById("hourHand");
+    const minuteHand = document.getElementById("minuteHand");
+
+    hourHand.style.transform =
+        `translateX(-50%) rotate(${hourAngle}deg)`;
+
+    minuteHand.style.transform =
+        `translateX(-50%) rotate(${minuteAngle}deg)`;
+
+
+    /*
+     * Digital clock
+     */
+
+    const hours12 = hours % 12 || 12;
+
+    const formattedHours = String(hours12).padStart(2, "0");
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(seconds).padStart(2, "0");
+
+    document.getElementById("digitalTime").textContent =
+        `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+
+
+    /*
+     * Date
+     */
+
+    const dateText = now.toLocaleDateString("en-CA", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+
+    document.getElementById("todayDate").textContent =
+        dateText.toUpperCase();
 }
 
+updateClock();
+setInterval(updateClock, 250);
 
-/* =========================================================
-   RENDER LISTS
-========================================================= */
+
+/* =========================
+   WEATHER
+========================= */
+
+async function loadWeather() {
+
+    const weatherIcon = document.getElementById("weatherIcon");
+    const weatherTemp = document.getElementById("weatherTemp");
+    const weatherDescription =
+        document.getElementById("weatherDescription");
+
+    /*
+     * Existing configured weather location.
+     * This does not request the user's device location.
+     */
+    const latitude = 43.8561;
+    const longitude = -79.3370;
+
+    try {
+
+        const response = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`
+        );
+
+        if (!response.ok) {
+            throw new Error("Weather request failed");
+        }
+
+        const data = await response.json();
+
+        const temperature = Math.round(
+            data.current.temperature_2m
+        );
+
+        const code = data.current.weather_code;
+
+        let description = "CLEAR";
+        let icon = "☀";
+
+        if ([1, 2, 3].includes(code)) {
+            description = "PARTLY CLOUDY";
+            icon = "☁";
+        }
+
+        if ([45, 48].includes(code)) {
+            description = "FOG";
+            icon = "≋";
+        }
+
+        if ([51, 53, 55, 56, 57].includes(code)) {
+            description = "DRIZZLE";
+            icon = "☂";
+        }
+
+        if ([61, 63, 65, 66, 67].includes(code)) {
+            description = "RAIN";
+            icon = "☂";
+        }
+
+        if ([71, 73, 75, 77].includes(code)) {
+            description = "SNOW";
+            icon = "❄";
+        }
+
+        if ([80, 81, 82].includes(code)) {
+            description = "RAIN SHOWERS";
+            icon = "☂";
+        }
+
+        if ([85, 86].includes(code)) {
+            description = "SNOW SHOWERS";
+            icon = "❄";
+        }
+
+        if ([95, 96, 99].includes(code)) {
+            description = "THUNDERSTORM";
+            icon = "⚡";
+        }
+
+        weatherIcon.textContent = icon;
+        weatherTemp.textContent = `${temperature}°`;
+        weatherDescription.textContent = description;
+
+    } catch (error) {
+
+        weatherIcon.textContent = "--";
+        weatherTemp.textContent = "--°";
+        weatherDescription.textContent =
+            "WEATHER UNAVAILABLE";
+    }
+}
+
+loadWeather();
+
+
+/* =========================
+   LIST RENDERING
+========================= */
 
 function renderLists() {
 
-    const container =
-        document.getElementById(
-            "listsContainer"
-        );
+    const container = document.getElementById("listsContainer");
+    const emptyLists = document.getElementById("emptyLists");
+    const listView = document.getElementById("listView");
 
+    if (currentListId && lists[currentListId]) {
+        container.style.display = "none";
+        emptyLists.style.display = "none";
+        listView.classList.remove("hidden");
+
+        renderCurrentList();
+        return;
+    }
+
+    listView.classList.add("hidden");
+    container.style.display = "";
     container.innerHTML = "";
 
+    const listIds = Object.keys(lists);
 
-    Object.entries(lists)
-        .forEach(([id, list]) => {
+    if (listIds.length === 0) {
+        emptyLists.style.display = "";
+        return;
+    }
 
-            const card =
-                document.createElement(
-                    "div"
-                );
+    emptyLists.style.display = "none";
 
-            card.className =
-                "list-card";
+    listIds.forEach(id => {
 
+        const list = lists[id];
 
-            card.innerHTML = `
+        const card = document.createElement("div");
+        card.className = "list-card";
 
-                <div class="list-card-top">
+        const main = document.createElement("div");
+        main.className = "list-card-main";
 
-                    <div class="list-card-icon">
-                        ☷
-                    </div>
+        main.innerHTML = `
+            <div class="list-card-title"></div>
+            <div class="list-card-count"></div>
+        `;
 
-                    <div class="list-card-menu">
+        main.querySelector(".list-card-title").textContent =
+            list.name;
 
-                        <button
-                            class="rename-list"
-                            data-id="${id}"
-                            title="Rename">
+        main.querySelector(".list-card-count").textContent =
+            `${list.items.length} ITEM${list.items.length === 1 ? "" : "S"}`;
 
-                            ✎
-
-                        </button>
-
-                        <button
-                            class="delete-list"
-                            data-id="${id}"
-                            title="Delete">
-
-                            ×
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <h3>
-                    ${escapeHtml(list.name)}
-                </h3>
-
-
-                <p>
-                    ${list.items.length}
-                    ${list.items.length === 1
-                        ? "item"
-                        : "items"}
-                </p>
-
-            `;
-
-
-            card.addEventListener(
-                "click",
-                event => {
-
-                    if (
-                        event.target.closest(
-                            ".rename-list"
-                        ) ||
-                        event.target.closest(
-                            ".delete-list"
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    openList(id);
-
-                }
-            );
-
-
-            container.appendChild(card);
-
+        main.addEventListener("click", () => {
+            openList(id);
         });
 
 
-    document
-        .querySelectorAll(".rename-list")
-        .forEach(button => {
+        const actions = document.createElement("div");
+        actions.className = "list-card-actions";
 
-            button.addEventListener(
-                "click",
-                event => {
 
-                    event.stopPropagation();
+        const renameButton = document.createElement("button");
+        renameButton.className = "icon-button";
+        renameButton.type = "button";
+        renameButton.textContent = "✎";
+        renameButton.title = "Rename list";
 
-                    openRenameModal(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
+        renameButton.addEventListener("click", event => {
+            event.stopPropagation();
+            openRenameModal(id);
         });
 
 
-    document
-        .querySelectorAll(".delete-list")
-        .forEach(button => {
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "icon-button";
+        deleteButton.type = "button";
+        deleteButton.textContent = "×";
+        deleteButton.title = "Delete list";
 
-            button.addEventListener(
-                "click",
-                event => {
-
-                    event.stopPropagation();
-
-                    deleteList(
-                        button.dataset.id
-                    );
-
-                }
-            );
-
+        deleteButton.addEventListener("click", event => {
+            event.stopPropagation();
+            deleteList(id);
         });
 
 
-    updateListCount();
+        actions.appendChild(renameButton);
+        actions.appendChild(deleteButton);
 
+        card.appendChild(main);
+        card.appendChild(actions);
+
+        container.appendChild(card);
+    });
 }
 
 
-/* =========================================================
-   CREATE LIST
-========================================================= */
+/* =========================
+   OPEN LIST
+========================= */
 
-document
-    .getElementById("newListButton")
-    .addEventListener(
-        "click",
-        () => {
+function openList(id) {
 
-            openModal(
-                "newListModal"
-            );
+    if (!lists[id]) {
+        return;
+    }
+
+    currentListId = id;
+    renderLists();
+}
 
 
-            setTimeout(() => {
+/* =========================
+   CURRENT LIST
+========================= */
 
-                document
-                    .getElementById(
-                        "newListName"
-                    )
-                    .focus();
+function renderCurrentList() {
 
-            }, 100);
+    if (!currentListId || !lists[currentListId]) {
+        return;
+    }
 
+    const currentList = lists[currentListId];
+
+    document.getElementById("currentListTitle").textContent =
+        currentList.name;
+
+    const listElement = document.getElementById("list");
+    const emptyItems = document.getElementById("emptyItems");
+
+    listElement.innerHTML = "";
+
+    if (currentList.items.length === 0) {
+        emptyItems.style.display = "";
+        return;
+    }
+
+    emptyItems.style.display = "none";
+
+    currentList.items.forEach((item, index) => {
+
+        const li = document.createElement("li");
+        li.className = "list-item";
+
+        if (item.done) {
+            li.classList.add("done");
         }
-    );
 
 
-document
-    .getElementById(
-        "createListConfirm"
-    )
-    .addEventListener(
-        "click",
-        createList
-    );
+        const text = document.createElement("span");
+        text.className = "list-item-text";
+        text.textContent = item.text;
+
+        text.addEventListener("click", () => {
+            toggleItem(index);
+        });
 
 
-document
-    .getElementById(
-        "newListName"
-    )
-    .addEventListener(
-        "keydown",
-        event => {
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-item";
+        deleteButton.type = "button";
+        deleteButton.textContent = "×";
+        deleteButton.title = "Delete item";
 
-            if (event.key === "Enter") {
-
-                createList();
-
-            }
-
-        }
-    );
+        deleteButton.addEventListener("click", () => {
+            deleteItem(index);
+        });
 
 
-function createList() {
+        li.appendChild(text);
+        li.appendChild(deleteButton);
 
-    const input =
-        document.getElementById(
-            "newListName"
-        );
-
-
-    const name =
-        input.value.trim();
+        listElement.appendChild(li);
+    });
+}
 
 
-    if (!name) return;
+/* =========================
+   ADD ITEM
+========================= */
 
+document.getElementById("itemForm").addEventListener("submit", event => {
 
-    const id =
-        "list_" +
-        Date.now() +
-        "_" +
-        Math.random()
-            .toString(36)
-            .slice(2, 7);
+    event.preventDefault();
 
+    if (!currentListId || !lists[currentListId]) {
+        return;
+    }
 
-    lists[id] = {
+    const input = document.getElementById("itemInput");
+    const text = input.value.trim();
 
-        name,
+    if (!text) {
+        return;
+    }
 
-        items: []
-
-    };
-
+    lists[currentListId].items.unshift({
+        text: text,
+        done: false
+    });
 
     saveLists();
 
     input.value = "";
 
-    closeModal(
-        "newListModal"
-    );
+    renderCurrentList();
+});
 
-    renderLists();
 
-    openList(id);
+/* =========================
+   TOGGLE ITEM
+========================= */
 
+function toggleItem(index) {
+
+    if (!currentListId || !lists[currentListId]) {
+        return;
+    }
+
+    const item = lists[currentListId].items[index];
+
+    if (!item) {
+        return;
+    }
+
+    item.done = !item.done;
+
+    saveLists();
+    renderCurrentList();
 }
 
 
-/* =========================================================
-   OPEN LIST
-========================================================= */
+/* =========================
+   DELETE ITEM
+========================= */
 
-function openList(id) {
+function deleteItem(index) {
 
-    if (!lists[id]) return;
+    if (!currentListId || !lists[currentListId]) {
+        return;
+    }
 
+    lists[currentListId].items.splice(index, 1);
+
+    saveLists();
+    renderCurrentList();
+}
+
+
+/* =========================
+   BACK TO LISTS
+========================= */
+
+document.getElementById("backToLists").addEventListener("click", () => {
+
+    currentListId = null;
+
+    document.getElementById("itemInput").value = "";
+
+    renderLists();
+});
+
+
+/* =========================
+   CREATE LIST
+========================= */
+
+const newListModal = document.getElementById("newListModal");
+
+document.getElementById("newListButton").addEventListener("click", () => {
+
+    document.getElementById("newListName").value = "";
+
+    newListModal.classList.remove("hidden");
+
+    setTimeout(() => {
+        document.getElementById("newListName").focus();
+    }, 50);
+});
+
+
+document.getElementById("closeNewList").addEventListener("click", () => {
+    newListModal.classList.add("hidden");
+});
+
+
+document.getElementById("newListForm").addEventListener("submit", event => {
+
+    event.preventDefault();
+
+    const input = document.getElementById("newListName");
+    const name = input.value.trim();
+
+    if (!name) {
+        return;
+    }
+
+    let id = "list_" + Date.now();
+
+    lists[id] = {
+        name: name,
+        items: []
+    };
+
+    saveLists();
+
+    newListModal.classList.add("hidden");
 
     currentListId = id;
 
-
-    document
-        .getElementById(
-            "listsContainer"
-        )
-        .classList.add(
-            "hidden"
-        );
+    renderLists();
+});
 
 
-    document
-        .querySelector(
-            "#listorePage .page-heading"
-        )
-        .classList.add(
-            "hidden"
-        );
+/* =========================
+   DELETE LIST
+========================= */
 
+function deleteList(id) {
 
-    document
-        .getElementById(
-            "individualList"
-        )
-        .classList.remove(
-            "hidden"
-        );
+    if (!lists[id]) {
+        return;
+    }
 
+    const confirmed = confirm(
+        `Delete "${lists[id].name}"?`
+    );
 
-    document
-        .getElementById(
-            "currentListName"
-        )
-        .textContent =
-        lists[id].name;
+    if (!confirmed) {
+        return;
+    }
 
+    delete lists[id];
 
-    renderItems();
+    saveLists();
 
+    if (currentListId === id) {
+        currentListId = null;
+    }
+
+    renderLists();
 }
 
 
-/* =========================================================
-   BACK TO LISTS
-========================================================= */
+/* =========================
+   RENAME LIST
+========================= */
 
-document
-    .getElementById(
-        "backToLists"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            currentListId = null;
-
-
-            document
-                .getElementById(
-                    "individualList"
-                )
-                .classList.add(
-                    "hidden"
-                );
-
-
-            document
-                .getElementById(
-                    "listsContainer"
-                )
-                .classList.remove(
-                    "hidden"
-                );
-
-
-            document
-                .querySelector(
-                    "#listorePage .page-heading"
-                )
-                .classList.remove(
-                    "hidden"
-                );
-
-
-            renderLists();
-
-        }
-    );
-
-
-/* =========================================================
-   RENAME
-========================================================= */
-
-document
-    .getElementById(
-        "renameListButton"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            if (!currentListId) return;
-
-            openRenameModal(
-                currentListId
-            );
-
-        }
-    );
+const renameListModal =
+    document.getElementById("renameListModal");
 
 
 function openRenameModal(id) {
 
-    const list =
-        lists[id];
+    if (!lists[id]) {
+        return;
+    }
 
+    renameListId = id;
 
-    if (!list) return;
+    document.getElementById("renameListName").value =
+        lists[id].name;
 
-
-    document
-        .getElementById(
-            "renameInput"
-        )
-        .value =
-        list.name;
-
-
-    document
-        .getElementById(
-            "renameConfirm"
-        )
-        .dataset.id =
-        id;
-
-
-    openModal(
-        "renameModal"
-    );
-
+    renameListModal.classList.remove("hidden");
 
     setTimeout(() => {
-
-        document
-            .getElementById(
-                "renameInput"
-            )
-            .focus();
-
-    }, 100);
-
+        document.getElementById("renameListName").focus();
+    }, 50);
 }
 
 
-document
-    .getElementById(
-        "renameConfirm"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            const id =
-                document
-                    .getElementById(
-                        "renameConfirm"
-                    )
-                    .dataset.id;
+document.getElementById("closeRenameList").addEventListener("click", () => {
+    renameListModal.classList.add("hidden");
+});
 
 
-            const name =
-                document
-                    .getElementById(
-                        "renameInput"
-                    )
-                    .value
-                    .trim();
+document.getElementById("renameListForm").addEventListener("submit", event => {
 
+    event.preventDefault();
 
-            if (
-                !name ||
-                !lists[id]
-            ) {
-
-                return;
-
-            }
-
-
-            lists[id].name =
-                name;
-
-
-            saveLists();
-
-            closeModal(
-                "renameModal"
-            );
-
-            renderLists();
-
-
-            if (
-                currentListId === id
-            ) {
-
-                document
-                    .getElementById(
-                        "currentListName"
-                    )
-                    .textContent =
-                    name;
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   DELETE LIST
-========================================================= */
-
-function deleteList(id) {
-
-    if (!lists[id]) return;
-
-
-    const confirmed =
-        confirm(
-            `Delete "${lists[id].name}"?`
-        );
-
-
-    if (!confirmed) return;
-
-
-    delete lists[id];
-
-
-    if (
-        !Object.keys(lists).length
-    ) {
-
-        const newId =
-            "list_" +
-            Date.now();
-
-
-        lists[newId] = {
-
-            name: "My List",
-
-            items: []
-
-        };
-
+    if (!renameListId || !lists[renameListId]) {
+        return;
     }
 
+    const input = document.getElementById("renameListName");
+    const name = input.value.trim();
+
+    if (!name) {
+        return;
+    }
+
+    lists[renameListId].name = name;
 
     saveLists();
 
+    renameListModal.classList.add("hidden");
+
     renderLists();
+});
 
-}
 
-
-/* =========================================================
-   ITEMS
-========================================================= */
-
-document
-    .getElementById(
-        "itemForm"
-    )
-    .addEventListener(
-        "submit",
-        event => {
-
-            event.preventDefault();
-
-
-            if (!currentListId) return;
-
-
-            const input =
-                document
-                    .getElementById(
-                        "itemInput"
-                    );
-
-
-            const text =
-                input.value.trim();
-
-
-            if (!text) return;
-
-
-            lists[currentListId]
-                .items
-                .unshift({
-
-                    text,
-
-                    done: false
-
-                });
-
-
-            saveLists();
-
-            input.value = "";
-
-            renderItems();
-
-        }
-    );
-
-
-function renderItems() {
-
-    const listElement =
-        document.getElementById(
-            "list"
-        );
-
-
-    listElement.innerHTML = "";
-
-
-    if (!currentListId) return;
-
-
-    const items =
-        lists[currentListId].items;
-
-
-    items.forEach(
-        (item, index) => {
-
-            const li =
-                document.createElement(
-                    "li"
-                );
-
-
-            li.className =
-                "list-item" +
-                (
-                    item.done
-                        ? " done"
-                        : ""
-                );
-
-
-            const span =
-                document.createElement(
-                    "span"
-                );
-
-
-            span.textContent =
-                item.text;
-
-
-            span.addEventListener(
-                "click",
-                () => {
-
-                    item.done =
-                        !item.done;
-
-
-                    saveLists();
-
-                    renderItems();
-
-                }
-            );
-
-
-            const deleteButton =
-                document.createElement(
-                    "button"
-                );
-
-
-            deleteButton.className =
-                "delete-item";
-
-
-            deleteButton.textContent =
-                "×";
-
-
-            deleteButton.addEventListener(
-                "click",
-                () => {
-
-                    lists[currentListId]
-                        .items
-                        .splice(
-                            index,
-                            1
-                        );
-
-
-                    saveLists();
-
-                    renderItems();
-
-                }
-            );
-
-
-            li.appendChild(span);
-
-            li.appendChild(
-                deleteButton
-            );
-
-            listElement.appendChild(
-                li
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MODALS
-========================================================= */
-
-function openModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.add(
-            "show"
-        );
-
-}
-
-
-function closeModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.remove(
-            "show"
-        );
-
-}
-
-
-document
-    .querySelectorAll(
-        "[data-close]"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                closeModal(
-                    button.dataset.close
-                );
-
-            }
-        );
-
-    });
-
-
-document
-    .querySelectorAll(".modal")
-    .forEach(modal => {
-
-        modal.addEventListener(
-            "click",
-            event => {
-
-                if (
-                    event.target === modal
-                ) {
-
-                    modal.classList.remove(
-                        "show"
-                    );
-
-                }
-
-            }
-        );
-
-    });
-
-
-/* =========================================================
+/* =========================
    QR SHARING
-========================================================= */
+========================= */
 
-document
-    .getElementById(
-        "shareListButton"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            if (!currentListId) return;
+const shareModal =
+    document.getElementById("shareModal");
 
 
-            const list =
-                lists[currentListId];
+function encodeList(id) {
 
+    const data = {
+        type: "listore-share",
+        version: 1,
+        list: lists[id]
+    };
 
-            const payload =
-                encodeList(list);
-
-
-            const shareUrl =
-                window.location.href
-                    .split("#")[0] +
-                "#share=" +
-                payload;
-
-
-            document
-                .getElementById(
-                    "shareListTitle"
-                )
-                .textContent =
-                list.name;
-
-
-            const qrContainer =
-                document.getElementById(
-                    "qrCode"
-                );
-
-
-            qrContainer.innerHTML =
-                "";
-
-
-            new QRCode(
-                qrContainer,
-                {
-
-                    text: shareUrl,
-
-                    width: 180,
-
-                    height: 180,
-
-                    colorDark:
-                        "#05080d",
-
-                    colorLight:
-                        "#ffffff",
-
-                    correctLevel:
-                        QRCode.CorrectLevel.M
-
-                }
-            );
-
-
-            document
-                .getElementById(
-                    "copyShareLink"
-                )
-                .dataset.link =
-                shareUrl;
-
-
-            openModal(
-                "shareModal"
-            );
-
-        }
-    );
-
-
-/* COPY SHARE LINK */
-
-document
-    .getElementById(
-        "copyShareLink"
-    )
-    .addEventListener(
-        "click",
-        async () => {
-
-            const link =
-                document
-                    .getElementById(
-                        "copyShareLink"
-                    )
-                    .dataset.link;
-
-
-            try {
-
-                await navigator
-                    .clipboard
-                    .writeText(link);
-
-
-                const button =
-                    document
-                        .getElementById(
-                            "copyShareLink"
-                        );
-
-
-                const oldText =
-                    button.textContent;
-
-
-                button.textContent =
-                    "✓ COPIED";
-
-
-                setTimeout(
-                    () => {
-
-                        button.textContent =
-                            oldText;
-
-                    },
-                    1500
-                );
-
-
-            } catch {
-
-                alert(
-                    "Unable to copy the link."
-                );
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   QR ENCODE / DECODE
-========================================================= */
-
-function encodeList(list) {
-
-    const json =
-        JSON.stringify(list);
-
+    const json = JSON.stringify(data);
 
     return btoa(
-        encodeURIComponent(json)
-            .replace(
-                /%([0-9A-F]{2})/g,
-                (_, p1) =>
-                    String.fromCharCode(
-                        parseInt(
-                            p1,
-                            16
-                        )
-                    )
-            )
+        encodeURIComponent(json).replace(
+            /%([0-9A-F]{2})/g,
+            function (match, p1) {
+                return String.fromCharCode(
+                    parseInt(p1, 16)
+                );
+            }
+        )
     );
-
 }
 
 
 function decodeList(encoded) {
 
-    const binary =
-        atob(encoded);
+    try {
 
+        const binary = atob(encoded);
 
-    const percentEncoded =
-        Array.from(binary)
-            .map(
-                char =>
-                    "%" +
-                    char
-                        .charCodeAt(0)
+        const percentEncoded = Array
+            .from(binary)
+            .map(char => {
+                return "%" +
+                    char.charCodeAt(0)
                         .toString(16)
-                        .padStart(
-                            2,
-                            "0"
-                        )
-            )
+                        .padStart(2, "0");
+            })
             .join("");
 
+        const json = decodeURIComponent(percentEncoded);
 
-    return JSON.parse(
-        decodeURIComponent(
-            percentEncoded
-        )
-    );
+        return JSON.parse(json);
 
+    } catch {
+        return null;
+    }
 }
 
 
-/* =========================================================
-   IMPORT SHARE LINK
-========================================================= */
+document.getElementById("shareListButton")
+    .addEventListener("click", () => {
+
+        if (!currentListId || !lists[currentListId]) {
+            return;
+        }
+
+        const encoded = encodeList(currentListId);
+
+        const shareUrl =
+            `${window.location.origin}${window.location.pathname}#share=${encoded}`;
+
+        const qrContainer =
+            document.getElementById("qrcode");
+
+        qrContainer.innerHTML = "";
+
+        new QRCode(qrContainer, {
+            text: shareUrl,
+            width: 200,
+            height: 200,
+            correctLevel: QRCode.CorrectLevel.M
+        });
+
+        document.getElementById("shareListName")
+            .textContent = lists[currentListId].name;
+
+        shareModal.classList.remove("hidden");
+    });
+
+
+document.getElementById("closeShareModal")
+    .addEventListener("click", () => {
+
+        shareModal.classList.add("hidden");
+    });
+
+
+/* =========================
+   QR IMPORT FROM URL
+========================= */
 
 function importSharedListFromHash() {
 
-    const hash =
-        window.location.hash;
+    const hash = window.location.hash;
 
+    if (!hash.startsWith("#share=")) {
+        return;
+    }
+
+    const encoded = hash.substring(7);
+
+    const decoded = decodeList(encoded);
 
     if (
-        !hash.startsWith(
-            "#share="
-        )
+        !decoded ||
+        decoded.type !== "listore-share" ||
+        !decoded.list
     ) {
-
+        alert("Invalid Listore QR code.");
         return;
-
     }
 
+    const originalName =
+        decoded.list.name || "Imported List";
 
-    try {
+    let newName = originalName;
 
-        const encoded =
-            hash.substring(7);
+    const existingNames = Object.values(lists)
+        .map(list => list.name);
 
+    let counter = 2;
 
-        const sharedList =
-            decodeList(encoded);
-
-
-        if (
-            !sharedList ||
-            typeof sharedList.name !==
-                "string" ||
-            !Array.isArray(
-                sharedList.items
-            )
-        ) {
-
-            throw new Error(
-                "Invalid list"
-            );
-
-        }
-
-
-        const id =
-            "imported_" +
-            Date.now();
-
-
-        lists[id] = {
-
-            name:
-                sharedList.name +
-                " (Imported)",
-
-            items:
-                sharedList.items
-
-        };
-
-
-        saveLists();
-
-
-        window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname +
-            window.location.search
-        );
-
-
-        renderLists();
-
-
-        alert(
-            `"${sharedList.name}" was imported successfully!`
-        );
-
-
-    } catch {
-
-        alert(
-            "This QR code does not contain a valid Listore list."
-        );
-
+    while (existingNames.includes(newName)) {
+        newName = `${originalName} (${counter})`;
+        counter++;
     }
 
+    const newId = "list_" + Date.now();
+
+    lists[newId] = {
+        name: newName,
+        items: Array.isArray(decoded.list.items)
+            ? decoded.list.items
+            : []
+    };
+
+    saveLists();
+
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+
+    alert(`Imported "${newName}" successfully.`);
+
+    currentListId = newId;
+
+    showPage("listore");
 }
 
 
-/* =========================================================
+/* =========================
    QR SCANNER
-========================================================= */
+========================= */
 
-function scannerStatus(message) {
+const scannerStatus =
+    document.getElementById("scannerStatus");
 
-    document
-        .getElementById(
-            "scannerStatus"
-        )
-        .textContent =
-        message;
+const startScannerButton =
+    document.getElementById("startScannerButton");
 
-}
-
-
-document
-    .getElementById(
-        "startScanner"
-    )
-    .addEventListener(
-        "click",
-        startScanner
-    );
-
-
-document
-    .getElementById(
-        "stopScanner"
-    )
-    .addEventListener(
-        "click",
-        stopScanner
-    );
+const stopScannerButton =
+    document.getElementById("stopScannerButton");
 
 
 async function startScanner() {
 
-    if (scannerRunning) return;
-
-
-    if (
-        typeof Html5Qrcode ===
-        "undefined"
-    ) {
-
-        scannerStatus(
-            "QR scanner library could not load."
-        );
-
+    if (scannerRunning) {
         return;
-
     }
 
+    if (typeof Html5Qrcode === "undefined") {
+
+        scannerStatus.textContent =
+            "SCANNER LIBRARY FAILED TO LOAD";
+
+        return;
+    }
 
     if (
         location.protocol !== "https:" &&
         location.hostname !== "localhost" &&
-        location.hostname !==
-            "127.0.0.1"
+        location.hostname !== "127.0.0.1"
     ) {
 
-        scannerStatus(
-            "Camera scanning requires HTTPS or localhost."
-        );
+        scannerStatus.textContent =
+            "CAMERA REQUIRES HTTPS OR LOCALHOST";
 
         return;
-
     }
 
+    scannerStatus.textContent =
+        "REQUESTING CAMERA...";
 
     try {
 
-        scanner =
-            new Html5Qrcode(
-                "qr-reader"
-            );
-
-
         const cameras =
-            await Html5Qrcode
-                .getCameras();
+            await Html5Qrcode.getCameras();
 
-
-        if (!cameras.length) {
-
-            throw new Error(
-                "No camera found."
-            );
-
+        if (!cameras || cameras.length === 0) {
+            throw new Error("No camera found.");
         }
 
+        let cameraId = cameras[0].id;
 
-        let cameraId =
-            cameras[0].id;
+        const rearCamera = cameras.find(camera => {
 
+            const label =
+                (camera.label || "").toLowerCase();
 
-        const preferredCamera =
-            cameras.find(
-                camera =>
-                    /back|rear|environment/i
-                        .test(
-                            camera.label
-                        )
+            return (
+                label.includes("back") ||
+                label.includes("rear") ||
+                label.includes("environment")
             );
+        });
 
-
-        if (preferredCamera) {
-
-            cameraId =
-                preferredCamera.id;
-
+        if (rearCamera) {
+            cameraId = rearCamera.id;
         }
 
+        html5QrCode = new Html5Qrcode("qr-reader");
 
-        await scanner.start(
-
+        await html5QrCode.start(
             cameraId,
-
             {
-
                 fps: 10,
-
                 qrbox: {
-
-                    width: 230,
-
-                    height: 230
-
+                    width: 220,
+                    height: 220
                 }
-
             },
-
             decodedText => {
 
-                handleScannedQR(
-                    decodedText
-                );
+                handleScannedQRCode(decodedText);
 
             },
-
-            () => {}
-
+            () => {
+                // Ignore normal scan failures.
+            }
         );
-
 
         scannerRunning = true;
 
-
-        scannerStatus(
-            "Camera active. Point it at a Listore QR code."
-        );
-
+        scannerStatus.textContent =
+            "CAMERA ACTIVE — SCAN A LISTORE QR CODE";
 
     } catch (error) {
 
-        console.error(error);
-
-
-        scannerStatus(
-            "Unable to start the camera. Check camera permissions and HTTPS."
-        );
-
-
-        scanner = null;
-
         scannerRunning = false;
 
+        scannerStatus.textContent =
+            "CAMERA ERROR: " +
+            (error.message || "Unable to start camera.");
     }
-
 }
 
 
 async function stopScanner() {
 
-    if (
-        !scanner ||
-        !scannerRunning
-    ) {
-
-        scannerStatus(
-            "Camera is stopped."
-        );
-
+    if (!html5QrCode || !scannerRunning) {
         return;
-
     }
-
 
     try {
 
-        await scanner.stop();
+        await html5QrCode.stop();
+        html5QrCode.clear();
 
-        scanner.clear();
-
-    } catch (error) {
-
-        console.error(error);
-
+    } catch {
+        // Ignore cleanup errors.
     }
 
-
-    scanner = null;
-
+    html5QrCode = null;
     scannerRunning = false;
 
-
-    scannerStatus(
-        "Camera stopped."
-    );
-
+    scannerStatus.textContent =
+        "CAMERA STOPPED";
 }
 
 
-/* HANDLE QR */
+function handleScannedQRCode(decodedText) {
 
-function handleScannedQR(text) {
-
-    if (
-        !text.startsWith(
-            "#share="
-        ) &&
-        !text.includes(
-            "#share="
-        )
-    ) {
-
-        scannerStatus(
-            "That QR code is not a Listore share code."
-        );
-
+    if (!decodedText) {
         return;
-
     }
 
-
-    let hash;
-
-
-    if (
-        text.includes(
-            "#share="
-        )
-    ) {
-
-        hash =
-            text.substring(
-                text.indexOf(
-                    "#share="
-                )
-            );
-
-    } else {
-
-        hash = text;
-
-    }
-
+    let encoded = null;
 
     try {
 
-        const encoded =
-            hash.substring(7);
+        const url = new URL(decodedText);
 
+        const hash = url.hash;
 
-        const sharedList =
-            decodeList(encoded);
-
-
-        if (
-            !sharedList ||
-            typeof sharedList.name !==
-                "string" ||
-            !Array.isArray(
-                sharedList.items
-            )
-        ) {
-
-            throw new Error();
-
+        if (hash.startsWith("#share=")) {
+            encoded = hash.substring(7);
         }
-
-
-        const id =
-            "scanned_" +
-            Date.now();
-
-
-        lists[id] = {
-
-            name:
-                sharedList.name +
-                " (Imported)",
-
-            items:
-                sharedList.items
-
-        };
-
-
-        saveLists();
-
-        renderLists();
-
-
-        scannerStatus(
-            `"${sharedList.name}" imported successfully!`
-        );
-
-
-        stopScanner();
-
-
-        document
-            .querySelector(
-                '[data-page="listorePage"]'
-            )
-            .click();
-
 
     } catch {
 
-        scannerStatus(
-            "Invalid Listore QR code."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CLOCK
-========================================================= */
-
-function updateClock() {
-
-    const now =
-        new Date();
-
-
-    const time =
-        now.toLocaleTimeString(
-            undefined,
-            {
-
-                hour: "2-digit",
-
-                minute: "2-digit",
-
-                second: "2-digit",
-
-                hour12: false
-
-            }
-        );
-
-
-    const date =
-        now.toLocaleDateString(
-            undefined,
-            {
-
-                weekday: "long",
-
-                month: "long",
-
-                day: "numeric",
-
-                year: "numeric"
-
-            }
-        );
-
-
-    document
-        .getElementById(
-            "clockTime"
-        )
-        .textContent =
-        time;
-
-
-    document
-        .getElementById(
-            "clockDate"
-        )
-        .textContent =
-        date;
-
-}
-
-
-/* =========================================================
-   WEATHER
-========================================================= */
-
-async function loadWeather() {
-
-    const weatherText =
-        document.getElementById(
-            "weatherText"
-        );
-
-
-    const weatherTemp =
-        document.getElementById(
-            "weatherTemp"
-        );
-
-
-    const weatherIcon =
-        document.getElementById(
-            "weatherIcon"
-        );
-
-
-    if (
-        !navigator.geolocation
-    ) {
-
-        weatherText.textContent =
-            "Location unavailable";
-
-        return;
-
-    }
-
-
-    navigator.geolocation.getCurrentPosition(
-
-        async position => {
-
-            try {
-
-                const latitude =
-                    position.coords.latitude;
-
-
-                const longitude =
-                    position.coords.longitude;
-
-
-                const url =
-                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&temperature_unit=celsius`;
-
-
-                const response =
-                    await fetch(url);
-
-
-                const data =
-                    await response.json();
-
-
-                const temperature =
-                    Math.round(
-                        data.current
-                            .temperature_2m
-                    );
-
-
-                const code =
-                    data.current
-                        .weather_code;
-
-
-                const condition =
-                    getWeatherCondition(
-                        code
-                    );
-
-
-                weatherText.textContent =
-                    condition.text;
-
-
-                weatherTemp.textContent =
-                    `${temperature}°`;
-
-
-                weatherIcon.textContent =
-                    condition.icon;
-
-
-            } catch {
-
-                weatherText.textContent =
-                    "Weather unavailable";
-
-            }
-
-        },
-
-
-        () => {
-
-            weatherText.textContent =
-                "Location permission needed";
-
-            weatherTemp.textContent =
-                "--";
-
+        if (decodedText.startsWith("#share=")) {
+            encoded = decodedText.substring(7);
         }
 
-    );
-
-}
-
-
-function getWeatherCondition(code) {
-
-    if (code === 0) {
-
-        return {
-            text: "Clear skies",
-            icon: "☀️"
-        };
-
+        if (decodedText.startsWith("share=")) {
+            encoded = decodedText.substring(6);
+        }
     }
 
+    if (!encoded) {
 
-    if (code <= 3) {
+        scannerStatus.textContent =
+            "NOT A VALID LISTORE QR CODE";
 
-        return {
-            text: "Partly cloudy",
-            icon: "⛅"
-        };
-
+        return;
     }
 
+    const decoded = decodeList(encoded);
 
-    if (code <= 48) {
+    if (
+        !decoded ||
+        decoded.type !== "listore-share" ||
+        !decoded.list
+    ) {
 
-        return {
-            text: "Cloudy",
-            icon: "☁️"
-        };
+        scannerStatus.textContent =
+            "INVALID LISTORE QR CODE";
 
+        return;
     }
 
+    const originalName =
+        decoded.list.name || "Imported List";
 
-    if (code <= 67) {
+    let newName = originalName;
 
-        return {
-            text: "Rain",
-            icon: "🌧️"
-        };
+    const existingNames = Object.values(lists)
+        .map(list => list.name);
 
+    let counter = 2;
+
+    while (existingNames.includes(newName)) {
+        newName = `${originalName} (${counter})`;
+        counter++;
     }
 
+    const newId = "list_" + Date.now();
 
-    if (code <= 77) {
-
-        return {
-            text: "Snow",
-            icon: "❄️"
-        };
-
-    }
-
-
-    if (code <= 82) {
-
-        return {
-            text: "Rain showers",
-            icon: "🌦️"
-        };
-
-    }
-
-
-    return {
-
-        text: "Stormy",
-
-        icon: "⛈️"
-
+    lists[newId] = {
+        name: newName,
+        items: Array.isArray(decoded.list.items)
+            ? decoded.list.items
+            : []
     };
 
+    saveLists();
+
+    stopScanner();
+
+    alert(`Imported "${newName}" successfully.`);
+
+    currentListId = newId;
+
+    showPage("listore");
 }
 
 
-/* =========================================================
-   HTML ESCAPE
-========================================================= */
-
-function escapeHtml(text) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        text;
-
-
-    return div.innerHTML;
-
-}
-
-
-/* =========================================================
-   STARTUP
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        loadLists();
-
-        renderLists();
-
-        updateClock();
-
-        setInterval(
-            updateClock,
-            250
-        );
-
-        loadWeather();
-
-        importSharedListFromHash();
-
-    }
+startScannerButton.addEventListener(
+    "click",
+    startScanner
 );
+
+stopScannerButton.addEventListener(
+    "click",
+    stopScanner
+);
+
+
+/* =========================
+   MODAL BACKDROP CLOSE
+========================= */
+
+[newListModal, renameListModal, shareModal]
+    .forEach(modal => {
+
+        modal.addEventListener("click", event => {
+
+            if (event.target === modal) {
+                modal.classList.add("hidden");
+            }
+
+        });
+
+    });
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+loadLists();
+
+renderLists();
+
+importSharedListFromHash();
