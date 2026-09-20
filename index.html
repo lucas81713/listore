@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <meta name="theme-color" content="#050914">
+    <meta name="theme-color" content="#05080d">
 
     <title>Listore</title>
 
@@ -19,15 +19,17 @@
 
 <body>
 
-    <div class="space-background">
-        <div class="nebula nebula-one"></div>
-        <div class="nebula nebula-two"></div>
-        <div class="nebula nebula-three"></div>
+    <!-- TECH BACKGROUND -->
+    <div class="tech-background">
+        <div class="grid"></div>
+        <div class="glow glow-one"></div>
+        <div class="glow glow-two"></div>
 
-        <div class="stars stars-one"></div>
-        <div class="stars stars-two"></div>
-        <div class="stars stars-three"></div>
+        <div class="tech-line line-one"></div>
+        <div class="tech-line line-two"></div>
+        <div class="tech-line line-three"></div>
     </div>
+
 
     <div class="app-shell">
 
@@ -35,19 +37,27 @@
         <header class="app-header">
 
             <div class="brand">
-                <div class="brand-orbit">
-                    <div class="brand-planet"></div>
+
+                <div class="brand-logo">
+                    <div class="logo-core"></div>
+                    <div class="logo-ring ring-one"></div>
+                    <div class="logo-ring ring-two"></div>
                 </div>
 
                 <div>
                     <h1>Listore</h1>
-                    <span>YOUR DIGITAL SPACE</span>
+                    <span>PERSONAL ORGANIZATION SYSTEM</span>
                 </div>
+
             </div>
 
-            <div class="status-light">
-                <span></span>
-                ONLINE
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                <span>ONLINE</span>
+
             </div>
 
         </header>
@@ -56,142 +66,132 @@
         <!-- NAVIGATION -->
         <nav class="top-nav">
 
-            <button class="nav-button active" data-page="homePage">
+            <button
+                class="nav-button active"
+                data-page="homePage">
+
                 <span class="nav-icon">⌂</span>
                 <span>HOME</span>
+
             </button>
 
-            <button class="nav-button" data-page="listorePage">
+
+            <button
+                class="nav-button"
+                data-page="listorePage">
+
                 <span class="nav-icon">☷</span>
                 <span>LISTORE</span>
+
             </button>
 
-            <button class="nav-button" data-page="scanPage">
+
+            <button
+                class="nav-button"
+                data-page="scanPage">
+
                 <span class="nav-icon">▦</span>
                 <span>SCAN QR</span>
+
             </button>
 
         </nav>
 
 
-        <!-- ================= HOME ================= -->
+        <!-- =================================================
+             HOME
+        ================================================== -->
 
         <main id="homePage" class="page active-page">
 
-            <section class="hero-section">
+            <section class="home-header">
 
-                <div class="hero-label">
-                    <span class="pulse-dot"></span>
-                    SYSTEM CLOCK
+                <div class="section-label">
+                    <span class="label-line"></span>
+                    SYSTEM DASHBOARD
                 </div>
 
-                <h2>YOUR SPACE</h2>
+                <h2>
+                    Welcome back.
+                </h2>
 
-                <p class="hero-subtitle">
-                    Everything you need, orbiting around you.
+                <p>
+                    Everything you need, organized in one place.
                 </p>
 
             </section>
 
 
-            <!-- ORBITAL CLOCK -->
+            <!-- DIGITAL CLOCK -->
 
-            <section class="orbit-card">
+            <section class="clock-panel">
 
-                <div class="orbit-glow"></div>
-
-                <div class="space-scene">
-
-                    <div class="orbit orbit-large"></div>
-                    <div class="orbit orbit-medium"></div>
-                    <div class="orbit orbit-small"></div>
-
-                    <!-- STAR PARTICLES -->
-
-                    <span class="scene-star star-a"></span>
-                    <span class="scene-star star-b"></span>
-                    <span class="scene-star star-c"></span>
-                    <span class="scene-star star-d"></span>
-                    <span class="scene-star star-e"></span>
-                    <span class="scene-star star-f"></span>
-                    <span class="scene-star star-g"></span>
-                    <span class="scene-star star-h"></span>
-                    <span class="scene-star star-i"></span>
-                    <span class="scene-star star-j"></span>
-
-                    <!-- DISTANT PLANETS -->
-
-                    <div class="background-planet planet-blue"></div>
-                    <div class="background-planet planet-purple"></div>
-
-                    <!-- CENTRAL SUN -->
-
-                    <div class="sun">
-
-                        <div class="sun-surface"></div>
-
-                        <div class="sun-corona"></div>
-
-                        <div class="sun-flare flare-one"></div>
-                        <div class="sun-flare flare-two"></div>
-
-                    </div>
+                <div class="panel-corner corner-top-left"></div>
+                <div class="panel-corner corner-top-right"></div>
+                <div class="panel-corner corner-bottom-left"></div>
+                <div class="panel-corner corner-bottom-right"></div>
 
 
-                    <!-- MINUTE PLANET -->
+                <div class="clock-top">
 
-                    <div id="minuteOrbitPlanet" class="time-planet minute-planet">
+                    <span>
+                        SYSTEM TIME
+                    </span>
 
-                        <div class="planet-atmosphere"></div>
-                        <div class="planet-surface"></div>
-                        <div class="planet-clouds"></div>
-                        <div class="planet-highlight"></div>
-
-                    </div>
-
-
-                    <!-- SECOND PLANET -->
-
-                    <div id="secondOrbitPlanet" class="time-planet second-planet">
-
-                        <div class="planet-atmosphere"></div>
-                        <div class="planet-surface"></div>
-                        <div class="planet-clouds"></div>
-                        <div class="planet-highlight"></div>
-
-                    </div>
-
-
-                    <!-- RINGED PLANET -->
-
-                    <div class="ringed-planet">
-
-                        <div class="planet-body"></div>
-                        <div class="planet-ring ring-back"></div>
-                        <div class="planet-ring ring-front"></div>
-
+                    <div class="clock-live">
+                        <span></span>
+                        LIVE
                     </div>
 
                 </div>
 
 
-                <!-- CLOCK -->
+                <div class="digital-clock">
 
-                <div class="clock-content">
-
-                    <div id="clockTime" class="clock-time">
+                    <span id="clockTime">
                         00:00:00
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="clockDate"
+                    class="clock-date">
+
+                    Loading...
+
+                </div>
+
+
+                <!-- TECH CIRCULAR DISPLAY -->
+
+                <div class="tech-clock">
+
+                    <div class="tech-circle circle-one"></div>
+                    <div class="tech-circle circle-two"></div>
+                    <div class="tech-circle circle-three"></div>
+
+                    <div class="clock-ticks">
+                        <span class="tick tick-1"></span>
+                        <span class="tick tick-2"></span>
+                        <span class="tick tick-3"></span>
+                        <span class="tick tick-4"></span>
+                        <span class="tick tick-5"></span>
+                        <span class="tick tick-6"></span>
+                        <span class="tick tick-7"></span>
+                        <span class="tick tick-8"></span>
                     </div>
 
-                    <div id="clockDate" class="clock-date">
-                        Loading...
+                    <div class="clock-center">
+                        <div></div>
                     </div>
 
-                    <div class="clock-status">
-                        <span></span>
-                        LIVE ORBITAL SYSTEM
-                    </div>
+                </div>
 
+
+                <div class="clock-system-text">
+                    SYSTEM OPERATIONAL
                 </div>
 
             </section>
@@ -201,56 +201,101 @@
 
             <section class="weather-card">
 
-                <div class="weather-icon" id="weatherIcon">
-                    ☁
+                <div class="weather-left">
+
+                    <div
+                        id="weatherIcon"
+                        class="weather-icon">
+
+                        ☁
+
+                    </div>
+
+                    <div class="weather-info">
+
+                        <span>
+                            CURRENT CONDITIONS
+                        </span>
+
+                        <strong id="weatherText">
+                            Loading weather...
+                        </strong>
+
+                    </div>
+
                 </div>
 
-                <div class="weather-info">
 
-                    <span class="weather-label">
-                        CURRENT CONDITIONS
-                    </span>
+                <div
+                    id="weatherTemp"
+                    class="weather-temperature">
 
-                    <strong id="weatherText">
-                        Loading weather...
-                    </strong>
-
-                </div>
-
-                <div class="weather-temperature" id="weatherTemp">
                     --
+
                 </div>
 
             </section>
 
 
-            <!-- QUICK INFO -->
+            <!-- SYSTEM CARDS -->
 
             <section class="dashboard-grid">
 
-                <div class="info-card">
+                <div class="dashboard-card">
 
-                    <div class="info-card-icon">
-                        ◉
+                    <div class="dashboard-card-top">
+
+                        <span>
+                            SYSTEM STATUS
+                        </span>
+
+                        <div class="card-indicator"></div>
+
                     </div>
 
-                    <div>
-                        <span>MINUTE PLANET</span>
-                        <strong>MINUTES</strong>
+                    <strong>
+                        100%
+                    </strong>
+
+                    <small>
+                        ALL SYSTEMS OPERATIONAL
+                    </small>
+
+                    <div class="progress-bar">
+                        <div></div>
                     </div>
 
                 </div>
 
 
-                <div class="info-card">
+                <div class="dashboard-card">
 
-                    <div class="info-card-icon purple">
-                        ◉
+                    <div class="dashboard-card-top">
+
+                        <span>
+                            ACTIVE LISTS
+                        </span>
+
+                        <div class="card-icon">
+                            ☷
+                        </div>
+
                     </div>
 
-                    <div>
-                        <span>SECOND PLANET</span>
-                        <strong>SECONDS</strong>
+                    <strong id="listCount">
+                        0
+                    </strong>
+
+                    <small>
+                        ORGANIZED DATABASES
+                    </small>
+
+                    <div class="mini-bars">
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
                     </div>
 
                 </div>
@@ -260,50 +305,76 @@
         </main>
 
 
-        <!-- ================= LISTORE ================= -->
+        <!-- =================================================
+             LISTORE
+        ================================================== -->
 
         <main id="listorePage" class="page">
 
             <section class="page-heading">
 
                 <div>
-                    <span class="section-kicker">
-                        PERSONAL DATABASE
-                    </span>
 
-                    <h2>My Lists</h2>
+                    <div class="section-label">
+                        <span class="label-line"></span>
+                        PERSONAL DATABASE
+                    </div>
+
+                    <h2>
+                        My Lists
+                    </h2>
 
                     <p>
-                        Keep everything organized in your own orbit.
+                        Manage your lists and keep everything organized.
                     </p>
+
                 </div>
 
-                <button id="newListButton" class="primary-button">
+
+                <button
+                    id="newListButton"
+                    class="primary-button">
+
                     <span>＋</span>
                     NEW LIST
+
                 </button>
 
             </section>
 
 
-            <section id="listsContainer" class="lists-container"></section>
+            <!-- LIST COLLECTION -->
+
+            <section
+                id="listsContainer"
+                class="lists-container">
+            </section>
 
 
             <!-- INDIVIDUAL LIST -->
 
-            <section id="individualList" class="individual-list hidden">
+            <section
+                id="individualList"
+                class="individual-list hidden">
+
 
                 <div class="list-view-header">
 
-                    <button id="backToLists" class="icon-button">
+                    <button
+                        id="backToLists"
+                        class="icon-button">
+
                         ←
+
                     </button>
+
 
                     <div>
 
-                        <span class="section-kicker">
+                        <div class="section-label">
+                            <span class="label-line"></span>
                             ACTIVE LIST
-                        </span>
+                        </div>
 
                         <h2 id="currentListName">
                             List
@@ -311,14 +382,24 @@
 
                     </div>
 
+
                     <div class="list-header-actions">
 
-                        <button id="renameListButton" class="icon-button">
+                        <button
+                            id="renameListButton"
+                            class="icon-button">
+
                             ✎
+
                         </button>
 
-                        <button id="shareListButton" class="icon-button">
+
+                        <button
+                            id="shareListButton"
+                            class="icon-button">
+
                             ↗
+
                         </button>
 
                     </div>
@@ -326,7 +407,11 @@
                 </div>
 
 
-                <form id="itemForm" class="item-form">
+                <!-- ADD ITEM -->
+
+                <form
+                    id="itemForm"
+                    class="item-form">
 
                     <div class="input-wrapper">
 
@@ -336,26 +421,37 @@
                             id="itemInput"
                             type="text"
                             placeholder="Add something..."
-                            autocomplete="off"
-                        >
+                            autocomplete="off">
 
                     </div>
 
-                    <button type="submit" class="add-button">
+
+                    <button
+                        type="submit"
+                        class="add-button">
+
                         ADD
+
                     </button>
 
                 </form>
 
 
-                <ul id="list" class="items-list"></ul>
+                <!-- ITEMS -->
+
+                <ul
+                    id="list"
+                    class="items-list">
+                </ul>
 
             </section>
 
         </main>
 
 
-        <!-- ================= SCAN QR ================= -->
+        <!-- =================================================
+             SCAN QR
+        ================================================== -->
 
         <main id="scanPage" class="page">
 
@@ -363,14 +459,17 @@
 
                 <div>
 
-                    <span class="section-kicker">
+                    <div class="section-label">
+                        <span class="label-line"></span>
                         LISTORE NETWORK
-                    </span>
+                    </div>
 
-                    <h2>Scan QR</h2>
+                    <h2>
+                        Scan QR
+                    </h2>
 
                     <p>
-                        Import a list directly into your device.
+                        Import a Listore list directly into your device.
                     </p>
 
                 </div>
@@ -388,7 +487,9 @@
 
                     <div>
 
-                        <h3>QR SCANNER</h3>
+                        <h3>
+                            QR SCANNER
+                        </h3>
 
                         <p>
                             Point your camera at a Listore QR code.
@@ -399,22 +500,38 @@
                 </div>
 
 
-                <div id="qr-reader" class="qr-reader"></div>
+                <div
+                    id="qr-reader"
+                    class="qr-reader">
+                </div>
 
 
-                <div id="scannerStatus" class="scanner-status">
+                <div
+                    id="scannerStatus"
+                    class="scanner-status">
+
                     Camera is ready.
+
                 </div>
 
 
                 <div class="scanner-buttons">
 
-                    <button id="startScanner" class="primary-button">
+                    <button
+                        id="startScanner"
+                        class="primary-button">
+
                         START CAMERA
+
                     </button>
 
-                    <button id="stopScanner" class="secondary-button">
+
+                    <button
+                        id="stopScanner"
+                        class="secondary-button">
+
                         STOP
+
                     </button>
 
                 </div>
@@ -430,10 +547,12 @@
 
                 <div>
 
-                    <strong>Ready to scan</strong>
+                    <strong>
+                        Ready to scan
+                    </strong>
 
                     <p>
-                        Scanning a Listore QR code will create a copy of that list on your device.
+                        Scan a Listore QR code to import a copy of that list.
                     </p>
 
                 </div>
@@ -446,37 +565,69 @@
         <!-- FOOTER -->
 
         <footer class="app-footer">
+
             <span>LISTORE</span>
-            <span>•</span>
-            <span>PERSONAL SPACE SYSTEM</span>
+
+            <span class="footer-separator">
+                /
+            </span>
+
+            <span>
+                SYSTEM v1.0
+            </span>
+
+            <span class="footer-separator">
+                /
+            </span>
+
+            <span>
+                SECURE LOCAL STORAGE
+            </span>
+
         </footer>
 
     </div>
 
 
-    <!-- ================= NEW LIST MODAL ================= -->
+    <!-- =================================================
+         NEW LIST MODAL
+    ================================================== -->
 
-    <div id="newListModal" class="modal">
+    <div
+        id="newListModal"
+        class="modal">
 
         <div class="modal-card">
 
-            <button class="modal-close" data-close="newListModal">
+            <button
+                class="modal-close"
+                data-close="newListModal">
+
                 ×
+
             </button>
 
+
             <div class="modal-icon">
-                ✦
+                ＋
             </div>
 
-            <span class="section-kicker">
-                CREATE
-            </span>
 
-            <h2>Create New List</h2>
+            <div class="section-label">
+                <span class="label-line"></span>
+                CREATE
+            </div>
+
+
+            <h2>
+                Create New List
+            </h2>
+
 
             <p>
                 Give your new list a name.
             </p>
+
 
             <input
                 id="newListName"
@@ -484,11 +635,15 @@
                 type="text"
                 placeholder="List name..."
                 maxlength="40"
-                autocomplete="off"
-            >
+                autocomplete="off">
 
-            <button id="createListConfirm" class="primary-button full">
+
+            <button
+                id="createListConfirm"
+                class="primary-button full">
+
                 CREATE LIST
+
             </button>
 
         </div>
@@ -496,36 +651,55 @@
     </div>
 
 
-    <!-- ================= RENAME MODAL ================= -->
+    <!-- =================================================
+         RENAME MODAL
+    ================================================== -->
 
-    <div id="renameModal" class="modal">
+    <div
+        id="renameModal"
+        class="modal">
 
         <div class="modal-card">
 
-            <button class="modal-close" data-close="renameModal">
+            <button
+                class="modal-close"
+                data-close="renameModal">
+
                 ×
+
             </button>
+
 
             <div class="modal-icon">
                 ✎
             </div>
 
-            <span class="section-kicker">
-                EDIT
-            </span>
 
-            <h2>Rename List</h2>
+            <div class="section-label">
+                <span class="label-line"></span>
+                EDIT
+            </div>
+
+
+            <h2>
+                Rename List
+            </h2>
+
 
             <input
                 id="renameInput"
                 class="modal-input"
                 type="text"
                 maxlength="40"
-                autocomplete="off"
-            >
+                autocomplete="off">
 
-            <button id="renameConfirm" class="primary-button full">
+
+            <button
+                id="renameConfirm"
+                class="primary-button full">
+
                 SAVE NAME
+
             </button>
 
         </div>
@@ -533,25 +707,40 @@
     </div>
 
 
-    <!-- ================= QR SHARE MODAL ================= -->
+    <!-- =================================================
+         SHARE MODAL
+    ================================================== -->
 
-    <div id="shareModal" class="modal">
+    <div
+        id="shareModal"
+        class="modal">
 
         <div class="modal-card qr-modal-card">
 
-            <button class="modal-close" data-close="shareModal">
+            <button
+                class="modal-close"
+                data-close="shareModal">
+
                 ×
+
             </button>
+
 
             <div class="modal-icon">
                 ↗
             </div>
 
-            <span class="section-kicker">
-                SHARE LIST
-            </span>
 
-            <h2>Share Your List</h2>
+            <div class="section-label">
+                <span class="label-line"></span>
+                SHARE LIST
+            </div>
+
+
+            <h2>
+                Share Your List
+            </h2>
+
 
             <p>
                 Scan this QR code on another device to import a copy.
@@ -565,15 +754,23 @@
             </div>
 
 
-            <strong id="shareListTitle" class="share-list-title">
+            <strong
+                id="shareListTitle"
+                class="share-list-title">
+
                 List
+
             </strong>
 
 
             <div class="share-actions">
 
-                <button id="copyShareLink" class="secondary-button">
+                <button
+                    id="copyShareLink"
+                    class="secondary-button">
+
                     ⛓ COPY LINK
+
                 </button>
 
             </div>
