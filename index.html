@@ -1,440 +1,589 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>𝕃𝕚𝕤𝕥𝕠𝕣𝕖</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#050914">
 
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <title>Listore</title>
+
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-180.png">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
 
-  <div class="app">
+    <div class="space-background">
+        <div class="nebula nebula-one"></div>
+        <div class="nebula nebula-two"></div>
+        <div class="nebula nebula-three"></div>
 
-    <nav class="top-nav">
+        <div class="stars stars-one"></div>
+        <div class="stars stars-two"></div>
+        <div class="stars stars-three"></div>
+    </div>
 
-      <button class="nav-btn active" id="homeTab">
-        HOME
-      </button>
+    <div class="app-shell">
 
-      <button class="nav-btn" id="listoreTab">
-        LISTORE
-      </button>
+        <!-- HEADER -->
+        <header class="app-header">
 
-      <button class="nav-btn" id="scanTab">
-        SCAN QR
-      </button>
+            <div class="brand">
+                <div class="brand-orbit">
+                    <div class="brand-planet"></div>
+                </div>
 
-    </nav>
-
-
-    <!-- HOME -->
-
-    <section id="homePage" class="page active-page">
-
-      <div class="home-header">
-        <div class="status-dot"></div>
-        <span>SYSTEM ONLINE</span>
-      </div>
-
-
-      <div class="clock-container">
-
-        <div class="orbit orbit-minutes">
-          <div class="planet minute-planet" id="minutePlanet"></div>
-        </div>
-
-        <div class="orbit orbit-seconds">
-          <div class="planet second-planet" id="secondPlanet"></div>
-        </div>
-
-        <div class="clock-center">
-
-          <div id="time">
-            00:00:00
-          </div>
-
-          <div id="ampm">
-            AM
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="date-display" id="date">
-        Loading...
-      </div>
-
-
-      <div class="weather-card">
-
-        <div class="weather-icon" id="weatherIcon">
-          ☁
-        </div>
-
-        <div class="weather-info">
-
-          <div class="weather-title">
-            WEATHER
-          </div>
-
-          <div class="weather-temp" id="weatherTemp">
-            --°
-          </div>
-
-          <div class="weather-description" id="weatherDescription">
-            Loading weather...
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- LISTORE -->
-
-    <section id="listorePage" class="page">
-
-      <div id="listsView">
-
-        <div class="section-header">
-
-          <div>
-
-            <div class="section-label">
-              LISTORE
+                <div>
+                    <h1>Listore</h1>
+                    <span>YOUR DIGITAL SPACE</span>
+                </div>
             </div>
 
-            <h2>
-              MY LISTS
-            </h2>
-
-          </div>
-
-          <button class="add-list-btn" id="newListBtn">
-            +
-          </button>
-
-        </div>
-
-
-        <div id="listsContainer"></div>
-
-
-        <div id="emptyLists" class="empty-state">
-
-          <div class="empty-icon">
-            ＋
-          </div>
-
-          <div>
-            NO LISTS FOUND
-          </div>
-
-          <small>
-            Create a list to get started.
-          </small>
-
-        </div>
-
-      </div>
-
-
-      <div id="singleListView" class="hidden">
-
-        <div class="list-topbar">
-
-          <button class="back-btn" id="backToLists">
-            ‹
-          </button>
-
-          <div class="current-list-title">
-
-            <div class="section-label">
-              LIST
+            <div class="status-light">
+                <span></span>
+                ONLINE
             </div>
 
-            <h2 id="currentListName">
-              My List
-            </h2>
-
-          </div>
-
-          <button class="share-btn" id="shareListBtn">
-            QR
-          </button>
-
-        </div>
+        </header>
 
 
-        <form id="listForm">
+        <!-- NAVIGATION -->
+        <nav class="top-nav">
 
-          <input
-            id="itemInput"
-            placeholder="Add an item..."
-            autocomplete="off"
-          >
+            <button class="nav-button active" data-page="homePage">
+                <span class="nav-icon">⌂</span>
+                <span>HOME</span>
+            </button>
 
-          <button type="submit">
-            ADD
-          </button>
+            <button class="nav-button" data-page="listorePage">
+                <span class="nav-icon">☷</span>
+                <span>LISTORE</span>
+            </button>
 
-        </form>
+            <button class="nav-button" data-page="scanPage">
+                <span class="nav-icon">▦</span>
+                <span>SCAN QR</span>
+            </button>
 
-
-        <ul id="list"></ul>
-
-
-        <div id="emptyItems" class="empty-state item-empty">
-
-          <div class="empty-icon">
-            ◇
-          </div>
-
-          <div>
-            LIST IS EMPTY
-          </div>
-
-          <small>
-            Add something above.
-          </small>
-
-        </div>
-
-      </div>
-
-    </section>
+        </nav>
 
 
-    <!-- SCAN QR -->
+        <!-- ================= HOME ================= -->
 
-    <section id="scanPage" class="page">
+        <main id="homePage" class="page active-page">
 
-      <div class="scanner-page">
+            <section class="hero-section">
 
-        <div class="scanner-header">
+                <div class="hero-label">
+                    <span class="pulse-dot"></span>
+                    SYSTEM CLOCK
+                </div>
 
-          <div class="section-label">
-            LISTORE CONNECT
-          </div>
+                <h2>YOUR SPACE</h2>
 
-          <h2>
-            SCAN QR
-          </h2>
+                <p class="hero-subtitle">
+                    Everything you need, orbiting around you.
+                </p>
 
-          <p>
-            Scan a Listore QR code to import a copy of someone's list.
-          </p>
-
-        </div>
+            </section>
 
 
-        <div class="scanner-box">
+            <!-- ORBITAL CLOCK -->
 
-          <div id="qr-reader"></div>
+            <section class="orbit-card">
 
-        </div>
+                <div class="orbit-glow"></div>
 
+                <div class="space-scene">
 
-        <div class="scanner-status" id="scannerStatus">
-          READY TO SCAN
-        </div>
+                    <div class="orbit orbit-large"></div>
+                    <div class="orbit orbit-medium"></div>
+                    <div class="orbit orbit-small"></div>
 
+                    <!-- STAR PARTICLES -->
 
-        <button class="scanner-start-btn" id="startScannerBtn">
-          START CAMERA
-        </button>
+                    <span class="scene-star star-a"></span>
+                    <span class="scene-star star-b"></span>
+                    <span class="scene-star star-c"></span>
+                    <span class="scene-star star-d"></span>
+                    <span class="scene-star star-e"></span>
+                    <span class="scene-star star-f"></span>
+                    <span class="scene-star star-g"></span>
+                    <span class="scene-star star-h"></span>
+                    <span class="scene-star star-i"></span>
+                    <span class="scene-star star-j"></span>
 
+                    <!-- DISTANT PLANETS -->
 
-        <button class="scanner-stop-btn hidden" id="stopScannerBtn">
-          STOP CAMERA
-        </button>
+                    <div class="background-planet planet-blue"></div>
+                    <div class="background-planet planet-purple"></div>
 
+                    <!-- CENTRAL SUN -->
 
-        <div class="scanner-info">
+                    <div class="sun">
 
-          <div class="scanner-info-icon">
-            ⌁
-          </div>
+                        <div class="sun-surface"></div>
 
-          <div>
-            Point your camera at a Listore QR code.
-            The list will automatically be imported when recognized.
-          </div>
+                        <div class="sun-corona"></div>
 
-        </div>
+                        <div class="sun-flare flare-one"></div>
+                        <div class="sun-flare flare-two"></div>
 
-      </div>
-
-    </section>
-
-
-    <!-- CREATE LIST MODAL -->
-
-    <div class="modal hidden" id="createListModal">
-
-      <div class="modal-box">
-
-        <div class="modal-header">
-
-          <div>
-
-            <div class="section-label">
-              NEW LIST
-            </div>
-
-            <h2>
-              CREATE LIST
-            </h2>
-
-          </div>
-
-          <button class="close-btn" id="closeCreateModal">
-            ×
-          </button>
-
-        </div>
+                    </div>
 
 
-        <input
-          id="newListName"
-          class="modal-input"
-          placeholder="List name..."
-          maxlength="40"
-          autocomplete="off"
-        >
+                    <!-- MINUTE PLANET -->
+
+                    <div id="minuteOrbitPlanet" class="time-planet minute-planet">
+
+                        <div class="planet-atmosphere"></div>
+                        <div class="planet-surface"></div>
+                        <div class="planet-clouds"></div>
+                        <div class="planet-highlight"></div>
+
+                    </div>
 
 
-        <div class="modal-actions">
+                    <!-- SECOND PLANET -->
 
-          <button class="cancel-btn" id="cancelCreate">
-            CANCEL
-          </button>
+                    <div id="secondOrbitPlanet" class="time-planet second-planet">
 
-          <button class="confirm-btn" id="confirmCreate">
-            CREATE
-          </button>
+                        <div class="planet-atmosphere"></div>
+                        <div class="planet-surface"></div>
+                        <div class="planet-clouds"></div>
+                        <div class="planet-highlight"></div>
 
-        </div>
+                    </div>
 
-      </div>
+
+                    <!-- RINGED PLANET -->
+
+                    <div class="ringed-planet">
+
+                        <div class="planet-body"></div>
+                        <div class="planet-ring ring-back"></div>
+                        <div class="planet-ring ring-front"></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CLOCK -->
+
+                <div class="clock-content">
+
+                    <div id="clockTime" class="clock-time">
+                        00:00:00
+                    </div>
+
+                    <div id="clockDate" class="clock-date">
+                        Loading...
+                    </div>
+
+                    <div class="clock-status">
+                        <span></span>
+                        LIVE ORBITAL SYSTEM
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- WEATHER -->
+
+            <section class="weather-card">
+
+                <div class="weather-icon" id="weatherIcon">
+                    ☁
+                </div>
+
+                <div class="weather-info">
+
+                    <span class="weather-label">
+                        CURRENT CONDITIONS
+                    </span>
+
+                    <strong id="weatherText">
+                        Loading weather...
+                    </strong>
+
+                </div>
+
+                <div class="weather-temperature" id="weatherTemp">
+                    --
+                </div>
+
+            </section>
+
+
+            <!-- QUICK INFO -->
+
+            <section class="dashboard-grid">
+
+                <div class="info-card">
+
+                    <div class="info-card-icon">
+                        ◉
+                    </div>
+
+                    <div>
+                        <span>MINUTE PLANET</span>
+                        <strong>MINUTES</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="info-card">
+
+                    <div class="info-card-icon purple">
+                        ◉
+                    </div>
+
+                    <div>
+                        <span>SECOND PLANET</span>
+                        <strong>SECONDS</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- ================= LISTORE ================= -->
+
+        <main id="listorePage" class="page">
+
+            <section class="page-heading">
+
+                <div>
+                    <span class="section-kicker">
+                        PERSONAL DATABASE
+                    </span>
+
+                    <h2>My Lists</h2>
+
+                    <p>
+                        Keep everything organized in your own orbit.
+                    </p>
+                </div>
+
+                <button id="newListButton" class="primary-button">
+                    <span>＋</span>
+                    NEW LIST
+                </button>
+
+            </section>
+
+
+            <section id="listsContainer" class="lists-container"></section>
+
+
+            <!-- INDIVIDUAL LIST -->
+
+            <section id="individualList" class="individual-list hidden">
+
+                <div class="list-view-header">
+
+                    <button id="backToLists" class="icon-button">
+                        ←
+                    </button>
+
+                    <div>
+
+                        <span class="section-kicker">
+                            ACTIVE LIST
+                        </span>
+
+                        <h2 id="currentListName">
+                            List
+                        </h2>
+
+                    </div>
+
+                    <div class="list-header-actions">
+
+                        <button id="renameListButton" class="icon-button">
+                            ✎
+                        </button>
+
+                        <button id="shareListButton" class="icon-button">
+                            ↗
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <form id="itemForm" class="item-form">
+
+                    <div class="input-wrapper">
+
+                        <span>＋</span>
+
+                        <input
+                            id="itemInput"
+                            type="text"
+                            placeholder="Add something..."
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                    <button type="submit" class="add-button">
+                        ADD
+                    </button>
+
+                </form>
+
+
+                <ul id="list" class="items-list"></ul>
+
+            </section>
+
+        </main>
+
+
+        <!-- ================= SCAN QR ================= -->
+
+        <main id="scanPage" class="page">
+
+            <section class="page-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        LISTORE NETWORK
+                    </span>
+
+                    <h2>Scan QR</h2>
+
+                    <p>
+                        Import a list directly into your device.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <section class="scanner-card">
+
+                <div class="scanner-header">
+
+                    <div class="scanner-icon">
+                        ▦
+                    </div>
+
+                    <div>
+
+                        <h3>QR SCANNER</h3>
+
+                        <p>
+                            Point your camera at a Listore QR code.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="qr-reader" class="qr-reader"></div>
+
+
+                <div id="scannerStatus" class="scanner-status">
+                    Camera is ready.
+                </div>
+
+
+                <div class="scanner-buttons">
+
+                    <button id="startScanner" class="primary-button">
+                        START CAMERA
+                    </button>
+
+                    <button id="stopScanner" class="secondary-button">
+                        STOP
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <section class="scan-info">
+
+                <div class="scan-info-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>Ready to scan</strong>
+
+                    <p>
+                        Scanning a Listore QR code will create a copy of that list on your device.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- FOOTER -->
+
+        <footer class="app-footer">
+            <span>LISTORE</span>
+            <span>•</span>
+            <span>PERSONAL SPACE SYSTEM</span>
+        </footer>
 
     </div>
 
 
-    <!-- RENAME LIST MODAL -->
+    <!-- ================= NEW LIST MODAL ================= -->
 
-    <div class="modal hidden" id="renameListModal">
+    <div id="newListModal" class="modal">
 
-      <div class="modal-box">
+        <div class="modal-card">
 
-        <div class="modal-header">
+            <button class="modal-close" data-close="newListModal">
+                ×
+            </button>
 
-          <div>
-
-            <div class="section-label">
-              LIST SETTINGS
+            <div class="modal-icon">
+                ✦
             </div>
 
-            <h2>
-              RENAME LIST
-            </h2>
+            <span class="section-kicker">
+                CREATE
+            </span>
 
-          </div>
+            <h2>Create New List</h2>
 
-          <button class="close-btn" id="closeRenameModal">
-            ×
-          </button>
+            <p>
+                Give your new list a name.
+            </p>
 
-        </div>
+            <input
+                id="newListName"
+                class="modal-input"
+                type="text"
+                placeholder="List name..."
+                maxlength="40"
+                autocomplete="off"
+            >
 
-
-        <input
-          id="renameListInput"
-          class="modal-input"
-          placeholder="List name..."
-          maxlength="40"
-          autocomplete="off"
-        >
-
-
-        <div class="modal-actions">
-
-          <button class="cancel-btn" id="cancelRename">
-            CANCEL
-          </button>
-
-          <button class="confirm-btn" id="confirmRename">
-            SAVE
-          </button>
+            <button id="createListConfirm" class="primary-button full">
+                CREATE LIST
+            </button>
 
         </div>
-
-      </div>
 
     </div>
 
 
-    <!-- QR SHARE MODAL -->
+    <!-- ================= RENAME MODAL ================= -->
 
-    <div class="modal hidden" id="qrModal">
+    <div id="renameModal" class="modal">
 
-      <div class="modal-box qr-box">
+        <div class="modal-card">
 
-        <div class="modal-header">
+            <button class="modal-close" data-close="renameModal">
+                ×
+            </button>
 
-          <div>
-
-            <div class="section-label">
-              LISTORE SHARE
+            <div class="modal-icon">
+                ✎
             </div>
 
-            <h2>
-              SHARE LIST
-            </h2>
+            <span class="section-kicker">
+                EDIT
+            </span>
 
-          </div>
+            <h2>Rename List</h2>
 
-          <button class="close-btn" id="closeQrModal">
-            ×
-          </button>
+            <input
+                id="renameInput"
+                class="modal-input"
+                type="text"
+                maxlength="40"
+                autocomplete="off"
+            >
+
+            <button id="renameConfirm" class="primary-button full">
+                SAVE NAME
+            </button>
 
         </div>
-
-
-        <div class="qr-list-name" id="qrListName">
-          My List
-        </div>
-
-
-        <div id="qrcode"></div>
-
-
-        <p class="qr-instruction">
-          Scan this QR code with the Listore scanner to import a copy of this list.
-        </p>
-
-
-        <button class="copy-share-btn" id="copyShareLink">
-          COPY SHARE LINK
-        </button>
-
-      </div>
 
     </div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- ================= QR SHARE MODAL ================= -->
+
+    <div id="shareModal" class="modal">
+
+        <div class="modal-card qr-modal-card">
+
+            <button class="modal-close" data-close="shareModal">
+                ×
+            </button>
+
+            <div class="modal-icon">
+                ↗
+            </div>
+
+            <span class="section-kicker">
+                SHARE LIST
+            </span>
+
+            <h2>Share Your List</h2>
+
+            <p>
+                Scan this QR code on another device to import a copy.
+            </p>
+
+
+            <div class="qr-frame">
+
+                <div id="qrCode"></div>
+
+            </div>
+
+
+            <strong id="shareListTitle" class="share-list-title">
+                List
+            </strong>
+
+
+            <div class="share-actions">
+
+                <button id="copyShareLink" class="secondary-button">
+                    ⛓ COPY LINK
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
     <script src="script.js"></script>
-
-  </div>
 
 </body>
 </html>
