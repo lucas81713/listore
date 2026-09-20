@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05080f">
+
     <title>Listore</title>
 
     <link rel="icon" href="icon-192.png">
@@ -16,7 +18,7 @@
 
 <body>
 
-    <div class="app">
+    <main class="app">
 
         <nav class="top-nav">
             <button class="nav-button active" id="homeTab">HOME</button>
@@ -24,23 +26,28 @@
             <button class="nav-button" id="scanTab">SCAN QR</button>
         </nav>
 
+
         <!-- HOME -->
+
         <section id="homePage" class="page active">
 
             <div class="home-header">
+
                 <div class="status-line">
                     <span class="status-dot"></span>
                     SYSTEM ONLINE
                 </div>
 
                 <h1>LISTORE</h1>
+
                 <p>PERSONAL PRODUCTIVITY SYSTEM</p>
+
             </div>
 
-            <!-- ANALOG CLOCK -->
+
             <div class="clock-section">
 
-                <div class="analog-clock" id="analogClock">
+                <div class="analog-clock">
 
                     <div class="clock-tick tick-12"></div>
                     <div class="clock-tick tick-1"></div>
@@ -59,54 +66,82 @@
                     <div class="minute-hand" id="minuteHand"></div>
 
                     <div class="clock-center"></div>
+
                 </div>
 
-                <div class="digital-time" id="digitalTime">00:00:00</div>
-                <div class="date-display" id="todayDate">LOADING DATE...</div>
+
+                <div class="digital-time" id="digitalTime">
+                    00:00:00
+                </div>
+
+                <div class="date-display" id="todayDate">
+                    LOADING DATE...
+                </div>
 
             </div>
 
-            <div class="weather-panel">
-                <div class="panel-label">CURRENT CONDITIONS</div>
 
-                <div class="weather-main">
-                    <span id="weatherIcon">--</span>
-                    <span id="weatherTemp">--°</span>
+            <div class="weather-panel">
+
+                <div class="panel-label">
+                    CURRENT CONDITIONS
                 </div>
 
-                <div id="weatherDescription">LOADING WEATHER...</div>
+                <div class="weather-main">
+
+                    <span id="weatherIcon">--</span>
+
+                    <span id="weatherTemp">--°</span>
+
+                </div>
+
+                <div id="weatherDescription">
+                    LOADING WEATHER...
+                </div>
+
             </div>
 
         </section>
 
 
         <!-- LISTORE -->
+
         <section id="listorePage" class="page">
 
             <div class="section-header">
-                <div>
+
+                <div class="section-title">
+
                     <div class="status-line">
                         <span class="status-dot"></span>
                         LIST SYSTEM
                     </div>
 
                     <h2>LISTORE</h2>
+
                 </div>
 
                 <button class="primary-button" id="newListButton">
                     + NEW LIST
                 </button>
+
             </div>
+
 
             <div id="listsContainer" class="lists-container"></div>
 
+
             <div id="emptyLists" class="empty-state">
+
                 <div class="empty-icon">+</div>
+
                 <h3>NO LISTS</h3>
+
                 <p>Create a list to get started.</p>
+
             </div>
 
-            <!-- INDIVIDUAL LIST -->
+
             <div id="listView" class="list-view hidden">
 
                 <div class="list-view-header">
@@ -125,6 +160,7 @@
 
                 </div>
 
+
                 <form id="itemForm" class="item-form">
 
                     <input
@@ -140,12 +176,18 @@
 
                 </form>
 
+
                 <ul id="list" class="items-list"></ul>
 
+
                 <div id="emptyItems" class="empty-state small">
+
                     <div class="empty-icon">+</div>
+
                     <h3>LIST EMPTY</h3>
+
                     <p>Add an item above.</p>
+
                 </div>
 
             </div>
@@ -154,20 +196,24 @@
 
 
         <!-- SCAN QR -->
+
         <section id="scanPage" class="page">
 
             <div class="section-header">
 
-                <div>
+                <div class="section-title">
+
                     <div class="status-line">
                         <span class="status-dot"></span>
                         QR IMPORT SYSTEM
                     </div>
 
                     <h2>SCAN QR</h2>
+
                 </div>
 
             </div>
+
 
             <div class="scanner-panel">
 
@@ -182,6 +228,7 @@
                     <button
                         class="primary-button"
                         id="startScannerButton"
+                        type="button"
                     >
                         START CAMERA
                     </button>
@@ -189,6 +236,7 @@
                     <button
                         class="secondary-button"
                         id="stopScannerButton"
+                        type="button"
                     >
                         STOP CAMERA
                     </button>
@@ -197,29 +245,39 @@
 
             </div>
 
+
             <div class="info-panel">
+
                 <h3>HOW IT WORKS</h3>
+
                 <p>
                     Start the camera and point it at a Listore QR code.
                     The shared list will be imported into your device.
                 </p>
+
             </div>
 
         </section>
 
-    </div>
+    </main>
 
 
     <!-- NEW LIST MODAL -->
+
     <div id="newListModal" class="modal hidden">
 
         <div class="modal-content">
 
-            <button class="modal-close" id="closeNewList">
+            <button
+                class="modal-close"
+                id="closeNewList"
+                type="button"
+            >
                 ×
             </button>
 
             <h2>NEW LIST</h2>
+
             <p>Give your list a name.</p>
 
             <form id="newListForm">
@@ -244,11 +302,16 @@
 
 
     <!-- RENAME MODAL -->
+
     <div id="renameListModal" class="modal hidden">
 
         <div class="modal-content">
 
-            <button class="modal-close" id="closeRenameList">
+            <button
+                class="modal-close"
+                id="closeRenameList"
+                type="button"
+            >
                 ×
             </button>
 
@@ -275,11 +338,16 @@
 
 
     <!-- SHARE QR MODAL -->
+
     <div id="shareModal" class="modal hidden">
 
         <div class="modal-content share-modal-content">
 
-            <button class="modal-close" id="closeShareModal">
+            <button
+                class="modal-close"
+                id="closeShareModal"
+                type="button"
+            >
                 ×
             </button>
 
