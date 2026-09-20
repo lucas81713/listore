@@ -2,23 +2,35 @@
     box-sizing: border-box;
 }
 
-html,
-body {
-    margin: 0;
+html {
     min-height: 100%;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #05070d;
-    color: #eaf4ff;
 }
 
 body {
+    margin: 0;
     min-height: 100vh;
+    padding: 20px;
+
     display: flex;
     justify-content: center;
-    padding: 20px;
+    align-items: center;
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
     background:
-        radial-gradient(circle at 50% 0%, rgba(0, 110, 255, 0.12), transparent 35%),
+        radial-gradient(
+            circle at top,
+            rgba(0, 105, 255, 0.12),
+            transparent 40%
+        ),
         #05070d;
+
+    color: #eaf4ff;
 }
 
 button,
@@ -30,17 +42,30 @@ button {
     cursor: pointer;
 }
 
+
+/* =========================
+   APP
+========================= */
+
 .app {
     width: 100%;
     max-width: 520px;
-    min-height: calc(100vh - 40px);
+
+    min-height: min(760px, calc(100vh - 40px));
+
+    display: flex;
+    flex-direction: column;
+
     background: #080c14;
+
     border: 1px solid #172333;
     border-radius: 22px;
+
+    overflow: hidden;
+
     box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.5),
         0 0 40px rgba(0, 100, 255, 0.05);
-    overflow: hidden;
 }
 
 
@@ -49,23 +74,39 @@ button {
 ========================= */
 
 .top-nav {
+    flex: 0 0 auto;
+
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
+
+    height: 54px;
+
     border-bottom: 1px solid #172333;
+
     background: #070a11;
 }
 
 .nav-button {
     position: relative;
-    min-height: 52px;
+
+    width: 100%;
+    height: 54px;
+
     border: 0;
     border-right: 1px solid #172333;
+
     background: transparent;
+
     color: #61748c;
-    font-size: 12px;
+
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 1.5px;
-    transition: 0.2s;
+
+    letter-spacing: 1.4px;
+
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 .nav-button:last-child {
@@ -73,23 +114,28 @@ button {
 }
 
 .nav-button:hover {
-    color: #bcd9ff;
     background: #0b111c;
+    color: #bcd9ff;
 }
 
 .nav-button.active {
-    color: #39a9ff;
     background: #0a111d;
+    color: #39a9ff;
 }
 
 .nav-button.active::after {
     content: "";
+
     position: absolute;
-    left: 20%;
-    right: 20%;
+
+    left: 22%;
+    right: 22%;
     bottom: 0;
+
     height: 2px;
+
     background: #168cff;
+
     box-shadow: 0 0 12px #168cff;
 }
 
@@ -99,7 +145,12 @@ button {
 ========================= */
 
 .page {
+    flex: 1;
+
     display: none;
+
+    width: 100%;
+
     padding: 28px;
 }
 
@@ -109,217 +160,297 @@ button {
 
 
 /* =========================
-   HOME
+   HOME HEADER
 ========================= */
 
 .home-header {
     text-align: center;
-    margin-bottom: 25px;
+
+    margin-bottom: 22px;
 }
 
 .status-line {
     display: flex;
     align-items: center;
     justify-content: center;
+
     gap: 7px;
+
     color: #55708e;
-    font-size: 10px;
+
+    font-size: 9px;
     font-weight: 700;
+
     letter-spacing: 1.5px;
 }
 
 .status-dot {
     width: 6px;
     height: 6px;
+
+    flex: 0 0 6px;
+
     border-radius: 50%;
+
     background: #168cff;
+
     box-shadow: 0 0 10px #168cff;
 }
 
 .home-header h1 {
-    margin: 10px 0 3px;
-    font-size: 32px;
+    margin: 9px 0 3px;
+
+    font-size: 30px;
+    line-height: 1.1;
+
     letter-spacing: 5px;
+
     color: #f3f8ff;
 }
 
 .home-header p {
     margin: 0;
+
     color: #52677f;
-    font-size: 10px;
-    letter-spacing: 2px;
+
+    font-size: 9px;
+
+    letter-spacing: 1.8px;
 }
 
 
 /* =========================
-   ANALOG CLOCK
+   CLOCK
 ========================= */
 
 .clock-section {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    width: 100%;
 }
 
 .analog-clock {
     position: relative;
-    width: 270px;
-    height: 270px;
+
+    width: 250px;
+    height: 250px;
+
+    flex: 0 0 250px;
+
     border-radius: 50%;
+
     border: 2px solid #1c527d;
+
     background:
         radial-gradient(
             circle,
             #0d1827 0%,
-            #09111d 58%,
+            #09111d 60%,
             #060b13 100%
         );
+
     box-shadow:
         inset 0 0 35px rgba(0, 110, 255, 0.12),
         0 0 25px rgba(0, 120, 255, 0.08);
 }
 
-/* Inner technical ring */
 .analog-clock::before {
     content: "";
+
     position: absolute;
+
     inset: 13px;
+
     border-radius: 50%;
+
     border: 1px solid #142f48;
 }
 
-/* Outer technical ring */
 .analog-clock::after {
     content: "";
+
     position: absolute;
-    inset: 5px;
+
+    inset: 6px;
+
     border-radius: 50%;
+
     border: 1px dashed #12304b;
 }
 
 
-/* Clock ticks */
+/* =========================
+   CLOCK TICKS
+========================= */
 
 .clock-tick {
     position: absolute;
+
     left: 50%;
     top: 50%;
+
     width: 2px;
-    height: 10px;
+    height: 9px;
+
+    margin-left: -1px;
+
     background: #55728e;
-    transform-origin: 50% 125px;
+
     border-radius: 2px;
+
+    transform-origin: 1px 116px;
 }
 
 .tick-12 {
-    transform: translate(-50%, -125px);
+    transform: rotate(0deg) translateY(-116px);
 }
 
 .tick-1 {
-    transform: rotate(30deg) translateY(-125px);
+    transform: rotate(30deg) translateY(-116px);
 }
 
 .tick-2 {
-    transform: rotate(60deg) translateY(-125px);
+    transform: rotate(60deg) translateY(-116px);
 }
 
 .tick-3 {
-    transform: rotate(90deg) translateY(-125px);
+    transform: rotate(90deg) translateY(-116px);
 }
 
 .tick-4 {
-    transform: rotate(120deg) translateY(-125px);
+    transform: rotate(120deg) translateY(-116px);
 }
 
 .tick-5 {
-    transform: rotate(150deg) translateY(-125px);
+    transform: rotate(150deg) translateY(-116px);
 }
 
 .tick-6 {
-    transform: rotate(180deg) translateY(-125px);
+    transform: rotate(180deg) translateY(-116px);
 }
 
 .tick-7 {
-    transform: rotate(210deg) translateY(-125px);
+    transform: rotate(210deg) translateY(-116px);
 }
 
 .tick-8 {
-    transform: rotate(240deg) translateY(-125px);
+    transform: rotate(240deg) translateY(-116px);
 }
 
 .tick-9 {
-    transform: rotate(270deg) translateY(-125px);
+    transform: rotate(270deg) translateY(-116px);
 }
 
 .tick-10 {
-    transform: rotate(300deg) translateY(-125px);
+    transform: rotate(300deg) translateY(-116px);
 }
 
 .tick-11 {
-    transform: rotate(330deg) translateY(-125px);
+    transform: rotate(330deg) translateY(-116px);
 }
 
 
-/* Clock hands */
+/* =========================
+   CLOCK HANDS
+========================= */
 
 .hour-hand,
 .minute-hand {
     position: absolute;
+
     left: 50%;
-    bottom: 50%;
+    top: 50%;
+
+    border-radius: 10px;
+
     transform-origin: 50% 100%;
-    border-radius: 8px;
+
     z-index: 5;
-    transform: translateX(-50%) rotate(0deg);
 }
 
 .hour-hand {
     width: 6px;
-    height: 68px;
+    height: 65px;
+
+    margin-left: -3px;
+    margin-top: -65px;
+
     background: #d7eaff;
-    box-shadow: 0 0 10px rgba(60, 160, 255, 0.4);
+
+    box-shadow:
+        0 0 10px rgba(60, 160, 255, 0.4);
 }
 
 .minute-hand {
     width: 4px;
-    height: 92px;
+    height: 90px;
+
+    margin-left: -2px;
+    margin-top: -90px;
+
     background: #168cff;
-    box-shadow: 0 0 12px rgba(22, 140, 255, 0.65);
+
+    box-shadow:
+        0 0 12px rgba(22, 140, 255, 0.65);
 }
 
 .clock-center {
     position: absolute;
+
     left: 50%;
     top: 50%;
+
     width: 13px;
     height: 13px;
-    transform: translate(-50%, -50%);
+
+    margin-left: -6.5px;
+    margin-top: -6.5px;
+
     border-radius: 50%;
+
     background: #168cff;
+
     border: 3px solid #d7eaff;
+
     box-shadow:
         0 0 12px rgba(22, 140, 255, 0.8),
         0 0 25px rgba(22, 140, 255, 0.3);
+
     z-index: 10;
 }
 
 
-/* Digital time */
+/* =========================
+   DIGITAL CLOCK
+========================= */
 
 .digital-time {
-    margin-top: 22px;
+    margin-top: 20px;
+
     color: #eaf4ff;
-    font-size: 34px;
+
+    font-size: 30px;
     font-weight: 600;
+
+    line-height: 1;
+
     letter-spacing: 4px;
+
     font-variant-numeric: tabular-nums;
 }
 
 .date-display {
-    margin-top: 6px;
+    margin-top: 8px;
+
     color: #60768e;
-    font-size: 11px;
-    letter-spacing: 1.5px;
+
+    font-size: 10px;
+
+    letter-spacing: 1.3px;
+
+    text-align: center;
 }
 
 
@@ -328,18 +459,26 @@ button {
 ========================= */
 
 .weather-panel {
-    margin-top: 28px;
-    padding: 18px;
+    width: 100%;
+
+    margin-top: 24px;
+
+    padding: 15px 18px;
+
     border: 1px solid #172c40;
-    border-radius: 14px;
+    border-radius: 13px;
+
     background: #090f18;
+
     text-align: center;
 }
 
 .panel-label {
     color: #49647e;
-    font-size: 9px;
+
+    font-size: 8px;
     font-weight: 700;
+
     letter-spacing: 1.5px;
 }
 
@@ -347,38 +486,48 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
-    margin: 8px 0;
+
+    gap: 10px;
+
+    margin: 6px 0;
 }
 
 #weatherIcon {
     color: #3baaff;
-    font-size: 24px;
+
+    font-size: 21px;
 }
 
 #weatherTemp {
-    font-size: 28px;
+    font-size: 25px;
     font-weight: 600;
 }
 
 #weatherDescription {
     color: #60768e;
-    font-size: 11px;
-    text-transform: uppercase;
+
+    font-size: 9px;
+
     letter-spacing: 1px;
 }
 
 
 /* =========================
-   HEADERS
+   SECTION HEADER
 ========================= */
 
 .section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 15px;
-    margin-bottom: 25px;
+
+    margin-bottom: 22px;
+}
+
+.section-title {
+    min-width: 0;
 }
 
 .section-header .status-line {
@@ -387,7 +536,10 @@ button {
 
 .section-header h2 {
     margin: 5px 0 0;
-    font-size: 24px;
+
+    font-size: 23px;
+    line-height: 1;
+
     letter-spacing: 2px;
 }
 
@@ -398,30 +550,45 @@ button {
 
 .primary-button,
 .secondary-button {
-    min-height: 42px;
-    padding: 0 16px;
-    border-radius: 9px;
-    font-size: 11px;
+    min-height: 40px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
     font-weight: 700;
+
     letter-spacing: 1px;
+
+    white-space: nowrap;
+
     transition: 0.2s;
 }
 
 .primary-button {
     border: 1px solid #168cff;
+
     background: #0b5ca8;
+
     color: white;
-    box-shadow: 0 0 12px rgba(22, 140, 255, 0.12);
+
+    box-shadow:
+        0 0 12px rgba(22, 140, 255, 0.12);
 }
 
 .primary-button:hover {
     background: #0870d2;
-    box-shadow: 0 0 18px rgba(22, 140, 255, 0.25);
+
+    box-shadow:
+        0 0 18px rgba(22, 140, 255, 0.25);
 }
 
 .secondary-button {
     border: 1px solid #233c55;
+
     background: #0b111a;
+
     color: #7791aa;
 }
 
@@ -430,25 +597,38 @@ button {
     color: #b6d4ef;
 }
 
-.back-button {
-    border: 1px solid #1b3045;
-    background: #0a1018;
-    color: #7791aa;
+.back-button,
+.share-button {
+    height: 38px;
+
+    flex: 0 0 auto;
+
     border-radius: 8px;
-    padding: 10px 13px;
+
     font-size: 10px;
     font-weight: 700;
+
     letter-spacing: 1px;
 }
 
+.back-button {
+    padding: 0 12px;
+
+    border: 1px solid #1b3045;
+
+    background: #0a1018;
+
+    color: #7791aa;
+}
+
 .share-button {
+    padding: 0 14px;
+
     border: 1px solid #168cff;
+
     background: #0a1623;
+
     color: #39a9ff;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 10px;
-    font-weight: 700;
 }
 
 
@@ -459,17 +639,25 @@ button {
 .lists-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+
+    gap: 9px;
 }
 
 .list-card {
     display: flex;
     align-items: center;
+
     gap: 12px;
-    padding: 16px;
+
+    width: 100%;
+
+    padding: 14px;
+
     border: 1px solid #172c40;
-    border-radius: 12px;
+    border-radius: 11px;
+
     background: #0a1019;
+
     transition: 0.2s;
 }
 
@@ -481,33 +669,47 @@ button {
 .list-card-main {
     flex: 1;
     min-width: 0;
+
     cursor: pointer;
 }
 
 .list-card-title {
     color: #eaf4ff;
-    font-weight: 700;
+
     font-size: 14px;
+    font-weight: 700;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .list-card-count {
     margin-top: 4px;
+
     color: #566d85;
-    font-size: 10px;
+
+    font-size: 9px;
 }
 
 .list-card-actions {
     display: flex;
+    flex: 0 0 auto;
+
     gap: 5px;
 }
 
 .icon-button {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
+
     border: 1px solid #1b3045;
     border-radius: 7px;
+
     background: #0a1018;
+
     color: #66819b;
+
     font-size: 14px;
 }
 
@@ -524,8 +726,12 @@ button {
 .list-view-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+
+    width: 100%;
+
+    gap: 9px;
+
+    margin-bottom: 18px;
 }
 
 .list-title-area {
@@ -535,36 +741,56 @@ button {
 
 .list-title-area h2 {
     margin: 0;
+
+    font-size: 19px;
+    line-height: 1.2;
+
+    letter-spacing: 1px;
+
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 20px;
-    letter-spacing: 1px;
 }
 
 .item-form {
     display: flex;
+
+    width: 100%;
+
     gap: 8px;
-    margin-bottom: 18px;
+
+    margin-bottom: 16px;
 }
 
 .item-form input,
 .modal-content input {
     min-width: 0;
-    flex: 1;
-    height: 44px;
+    width: 100%;
+
+    height: 43px;
+
     border: 1px solid #1c354d;
-    border-radius: 9px;
+    border-radius: 8px;
+
     outline: none;
+
     background: #070d15;
+
     color: #eaf4ff;
-    padding: 0 13px;
+
+    padding: 0 12px;
+}
+
+.item-form input {
+    flex: 1;
 }
 
 .item-form input:focus,
 .modal-content input:focus {
     border-color: #168cff;
-    box-shadow: 0 0 0 2px rgba(22, 140, 255, 0.1);
+
+    box-shadow:
+        0 0 0 2px rgba(22, 140, 255, 0.1);
 }
 
 .item-form input::placeholder,
@@ -574,6 +800,7 @@ button {
 
 .items-list {
     list-style: none;
+
     padding: 0;
     margin: 0;
 }
@@ -581,38 +808,57 @@ button {
 .list-item {
     display: flex;
     align-items: center;
+
+    width: 100%;
+
     gap: 10px;
-    padding: 13px;
-    margin-bottom: 8px;
+
+    padding: 11px 12px;
+    margin-bottom: 7px;
+
     border: 1px solid #172c40;
-    border-radius: 10px;
+    border-radius: 9px;
+
     background: #0a1019;
 }
 
 .list-item-text {
     flex: 1;
     min-width: 0;
+
     color: #dce9f7;
-    font-size: 14px;
+
+    font-size: 13px;
+
     cursor: pointer;
+
     word-break: break-word;
 }
 
 .list-item.done .list-item-text {
     color: #52677c;
+
     text-decoration: line-through;
 }
 
 .delete-item {
-    flex: 0 0 auto;
+    flex: 0 0 30px;
+
     width: 30px;
     height: 30px;
+
+    padding: 0;
+
     border: 1px solid #462b35;
     border-radius: 7px;
+
     background: #180d12;
+
     color: #e15d75;
+
     font-size: 17px;
-    line-height: 1;
+
+    line-height: 27px;
 }
 
 .delete-item:hover {
@@ -626,38 +872,49 @@ button {
 ========================= */
 
 .empty-state {
-    padding: 45px 20px;
+    padding: 40px 15px;
+
     text-align: center;
+
     color: #536b82;
 }
 
 .empty-state.small {
-    padding: 35px 10px;
+    padding: 30px 10px;
 }
 
 .empty-icon {
-    width: 44px;
-    height: 44px;
-    margin: 0 auto 12px;
+    width: 42px;
+    height: 42px;
+
+    margin: 0 auto 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     border: 1px solid #1d4261;
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
     color: #168cff;
-    font-size: 22px;
+
+    font-size: 21px;
 }
 
 .empty-state h3 {
     margin: 0 0 5px;
+
     color: #8198ae;
-    font-size: 12px;
+
+    font-size: 11px;
+
     letter-spacing: 1.5px;
 }
 
 .empty-state p {
     margin: 0;
-    font-size: 11px;
+
+    font-size: 10px;
 }
 
 
@@ -666,24 +923,34 @@ button {
 ========================= */
 
 .scanner-panel {
-    padding: 18px;
+    width: 100%;
+
+    padding: 15px;
+
     border: 1px solid #172c40;
-    border-radius: 14px;
+    border-radius: 13px;
+
     background: #090f18;
 }
 
 #qr-reader {
     width: 100%;
-    min-height: 250px;
+
+    min-height: 240px;
+
     overflow: hidden;
+
     border: 1px solid #1b3b57;
-    border-radius: 10px;
+    border-radius: 9px;
+
     background: #05080d;
 }
 
 #qr-reader video {
     width: 100% !important;
-    border-radius: 9px;
+    height: auto !important;
+
+    border-radius: 8px;
 }
 
 #qr-reader__dashboard {
@@ -695,48 +962,69 @@ button {
 }
 
 .scanner-status {
-    margin-top: 15px;
-    padding: 11px;
-    border-radius: 8px;
+    width: 100%;
+
+    margin-top: 12px;
+
+    padding: 10px;
+
     border: 1px solid #162c40;
+    border-radius: 7px;
+
     background: #070d15;
+
     color: #5e7892;
-    font-size: 10px;
+
+    font-size: 9px;
     font-weight: 700;
+
     text-align: center;
+
     letter-spacing: 1px;
 }
 
 .scanner-buttons {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
     gap: 8px;
-    margin-top: 12px;
+
+    margin-top: 10px;
 }
 
 .scanner-buttons button {
-    flex: 1;
+    width: 100%;
 }
 
 .info-panel {
-    margin-top: 15px;
-    padding: 17px;
+    margin-top: 13px;
+
+    padding: 15px;
+
     border: 1px solid #172c40;
-    border-radius: 12px;
+    border-radius: 11px;
+
     background: #090f18;
 }
 
 .info-panel h3 {
-    margin: 0 0 7px;
+    margin: 0 0 6px;
+
     color: #89a7c2;
-    font-size: 11px;
+
+    font-size: 10px;
+
     letter-spacing: 1.5px;
 }
 
 .info-panel p {
     margin: 0;
+
     color: #566d84;
-    font-size: 11px;
-    line-height: 1.6;
+
+    font-size: 10px;
+
+    line-height: 1.5;
 }
 
 
@@ -746,13 +1034,19 @@ button {
 
 .modal {
     position: fixed;
+
     inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.75);
+
     z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.78);
 }
 
 .modal.hidden {
@@ -761,44 +1055,61 @@ button {
 
 .modal-content {
     position: relative;
-    width: 100%;
-    max-width: 390px;
-    padding: 27px;
+
+    width: min(390px, 100%);
+
+    padding: 25px;
+
     border: 1px solid #214665;
-    border-radius: 16px;
+    border-radius: 15px;
+
     background: #090f18;
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.6);
 }
 
 .modal-content h2 {
-    margin: 0 0 7px;
-    font-size: 21px;
+    margin: 0 0 6px;
+
+    font-size: 20px;
+
     letter-spacing: 1px;
 }
 
 .modal-content p {
-    margin: 0 0 18px;
+    margin: 0 0 17px;
+
     color: #60778e;
-    font-size: 11px;
+
+    font-size: 10px;
+
     line-height: 1.5;
 }
 
 .modal-content form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+
+    gap: 9px;
 }
 
 .modal-close {
     position: absolute;
-    top: 10px;
-    right: 12px;
+
+    top: 9px;
+    right: 10px;
+
     width: 34px;
     height: 34px;
+
     border: 0;
+
     background: transparent;
+
     color: #617a91;
-    font-size: 24px;
+
+    font-size: 23px;
 }
 
 .modal-close:hover {
@@ -816,128 +1127,205 @@ button {
 
 #qrcode {
     display: flex;
-    justify-content: center;
+
     align-items: center;
-    min-height: 230px;
-    margin: 20px 0;
-    padding: 18px;
-    border-radius: 12px;
+    justify-content: center;
+
+    width: 100%;
+
+    min-height: 220px;
+
+    margin: 18px 0;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
     background: white;
 }
 
 #qrcode img,
 #qrcode canvas {
+    display: block;
+
     max-width: 100%;
     height: auto;
 }
 
 .share-list-name {
     color: #39a9ff;
-    font-size: 12px;
+
+    font-size: 11px;
     font-weight: 700;
+
     letter-spacing: 1px;
+
+    overflow-wrap: anywhere;
 }
 
 
 /* =========================
-   RESPONSIVE
+   HIDDEN
 ========================= */
 
-@media (max-width: 480px) {
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
 
     body {
         padding: 0;
+
+        align-items: stretch;
     }
 
     .app {
+        max-width: none;
+
         min-height: 100vh;
+
         border-radius: 0;
+
         border-left: 0;
         border-right: 0;
     }
 
     .page {
-        padding: 22px 18px;
+        padding: 24px 18px;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .page {
+        padding: 20px 14px;
+    }
+
+    .home-header {
+        margin-bottom: 18px;
+    }
+
+    .home-header h1 {
+        font-size: 27px;
     }
 
     .analog-clock {
-        width: 240px;
-        height: 240px;
+        width: 220px;
+        height: 220px;
+
+        flex-basis: 220px;
     }
 
     .clock-tick {
-        transform-origin: 50% 110px;
+        transform-origin: 1px 101px;
     }
 
     .tick-12 {
-        transform: translate(-50%, -110px);
+        transform: rotate(0deg) translateY(-101px);
     }
 
     .tick-1 {
-        transform: rotate(30deg) translateY(-110px);
+        transform: rotate(30deg) translateY(-101px);
     }
 
     .tick-2 {
-        transform: rotate(60deg) translateY(-110px);
+        transform: rotate(60deg) translateY(-101px);
     }
 
     .tick-3 {
-        transform: rotate(90deg) translateY(-110px);
+        transform: rotate(90deg) translateY(-101px);
     }
 
     .tick-4 {
-        transform: rotate(120deg) translateY(-110px);
+        transform: rotate(120deg) translateY(-101px);
     }
 
     .tick-5 {
-        transform: rotate(150deg) translateY(-110px);
+        transform: rotate(150deg) translateY(-101px);
     }
 
     .tick-6 {
-        transform: rotate(180deg) translateY(-110px);
+        transform: rotate(180deg) translateY(-101px);
     }
 
     .tick-7 {
-        transform: rotate(210deg) translateY(-110px);
+        transform: rotate(210deg) translateY(-101px);
     }
 
     .tick-8 {
-        transform: rotate(240deg) translateY(-110px);
+        transform: rotate(240deg) translateY(-101px);
     }
 
     .tick-9 {
-        transform: rotate(270deg) translateY(-110px);
+        transform: rotate(270deg) translateY(-101px);
     }
 
     .tick-10 {
-        transform: rotate(300deg) translateY(-110px);
+        transform: rotate(300deg) translateY(-101px);
     }
 
     .tick-11 {
-        transform: rotate(330deg) translateY(-110px);
+        transform: rotate(330deg) translateY(-101px);
     }
 
     .hour-hand {
-        height: 61px;
+        height: 57px;
+
+        margin-top: -57px;
     }
 
     .minute-hand {
-        height: 80px;
+        height: 78px;
+
+        margin-top: -78px;
     }
 
     .digital-time {
-        font-size: 28px;
+        font-size: 26px;
+
+        letter-spacing: 3px;
+    }
+
+    .date-display {
+        font-size: 9px;
     }
 
     .section-header {
         align-items: flex-start;
     }
 
+    .section-header .primary-button {
+        padding: 0 11px;
+    }
+
     .item-form {
         flex-direction: column;
     }
 
+    .item-form .primary-button {
+        width: 100%;
+    }
+
     .scanner-buttons {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+    }
+
+    .list-view-header {
+        gap: 6px;
+    }
+
+    .back-button {
+        padding: 0 9px;
+    }
+
+    .share-button {
+        padding: 0 11px;
     }
 }
