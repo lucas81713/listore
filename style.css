@@ -51,7 +51,7 @@ body {
 }
 
 
-/* ---------- TOP NAVIGATION ---------- */
+/* ---------- NAV ---------- */
 
 .top-nav {
   height: 64px;
@@ -243,21 +243,21 @@ body {
 .planet {
   position: absolute;
 
-  width: 15px;
-  height: 15px;
-
-  border-radius: 50%;
-
   top: 50%;
   left: 50%;
 
-  transform-origin: center;
+  transform-origin: center center;
 
-  margin-left: -7.5px;
-  margin-top: -7.5px;
+  border-radius: 50%;
 }
 
 .minute-planet {
+  width: 15px;
+  height: 15px;
+
+  margin-left: -7.5px;
+  margin-top: -7.5px;
+
   background:
     radial-gradient(
       circle at 35% 30%,
@@ -268,9 +268,6 @@ body {
 
   box-shadow:
     0 0 14px #159cff;
-
-  animation:
-    minuteOrbit 60s linear infinite;
 }
 
 .second-planet {
@@ -290,33 +287,6 @@ body {
 
   box-shadow:
     0 0 12px rgba(200, 220, 240, 0.6);
-
-  animation:
-    secondOrbit 60s linear infinite;
-}
-
-@keyframes minuteOrbit {
-
-  from {
-    transform: rotate(0deg) translateX(102px);
-  }
-
-  to {
-    transform: rotate(360deg) translateX(102px);
-  }
-
-}
-
-@keyframes secondOrbit {
-
-  from {
-    transform: rotate(0deg) translateX(135px);
-  }
-
-  to {
-    transform: rotate(360deg) translateX(135px);
-  }
-
 }
 
 
@@ -355,9 +325,6 @@ body {
       rgba(12, 42, 70, 0.6),
       rgba(3, 12, 24, 0.8)
     );
-
-  box-shadow:
-    inset 0 0 20px rgba(0, 110, 255, 0.04);
 }
 
 .weather-icon {
@@ -375,9 +342,6 @@ body {
   background: #071a2d;
 
   border: 1px solid #164a74;
-
-  box-shadow:
-    0 0 15px rgba(0, 140, 255, 0.08);
 }
 
 .weather-info {
@@ -465,21 +429,8 @@ h2 {
   color: #52baff;
 
   font-size: 26px;
-  font-weight: 300;
 
   cursor: pointer;
-
-  box-shadow:
-    0 0 15px rgba(0, 140, 255, 0.08);
-
-  transition: 0.2s;
-}
-
-.add-list-btn:hover {
-  background: #0b2945;
-
-  box-shadow:
-    0 0 20px rgba(0, 150, 255, 0.2);
 }
 
 
@@ -514,9 +465,6 @@ h2 {
   border-color: #21699b;
 
   transform: translateY(-1px);
-
-  box-shadow:
-    0 5px 20px rgba(0, 100, 200, 0.1);
 }
 
 .list-card::before {
@@ -549,7 +497,6 @@ h2 {
   color: #d8edff;
 
   font-size: 16px;
-  font-weight: 500;
 }
 
 .list-card-count {
@@ -582,19 +529,11 @@ h2 {
 
   color: #6698bd;
 
-  font-size: 15px;
-
   cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.card-action:hover {
-  color: #63c4ff;
-
-  border-color: #2472a5;
 }
 
 .card-delete:hover {
@@ -604,7 +543,7 @@ h2 {
 }
 
 
-/* ---------- EMPTY STATE ---------- */
+/* ---------- EMPTY ---------- */
 
 .empty-state {
   text-align: center;
@@ -651,7 +590,7 @@ h2 {
 }
 
 
-/* ---------- INDIVIDUAL LIST ---------- */
+/* ---------- LIST ---------- */
 
 .list-topbar {
   gap: 12px;
@@ -674,8 +613,6 @@ h2 {
   color: #55baff;
 
   font-size: 29px;
-
-  line-height: 1;
 
   cursor: pointer;
 }
@@ -711,13 +648,11 @@ h2 {
   font-size: 10px;
   font-weight: 800;
 
-  letter-spacing: 1px;
-
   cursor: pointer;
 }
 
 
-/* ---------- ITEM FORM ---------- */
+/* ---------- FORM ---------- */
 
 #listForm {
   display: flex;
@@ -753,9 +688,6 @@ h2 {
 
 #itemInput:focus {
   border-color: #287eb4;
-
-  box-shadow:
-    0 0 15px rgba(0, 140, 255, 0.08);
 }
 
 #listForm button {
@@ -771,8 +703,6 @@ h2 {
 
   font-size: 10px;
   font-weight: 800;
-
-  letter-spacing: 1px;
 
   cursor: pointer;
 }
@@ -802,12 +732,6 @@ h2 {
   background: #071522;
 
   border: 1px solid #112f48;
-
-  transition: 0.15s;
-}
-
-#list li:hover {
-  border-color: #194a6c;
 }
 
 #list li span {
@@ -826,8 +750,6 @@ h2 {
   color: #4f6b82;
 
   text-decoration: line-through;
-
-  opacity: 0.7;
 }
 
 .delete-btn {
@@ -849,10 +771,6 @@ h2 {
   font-size: 16px;
 
   cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 
@@ -862,20 +780,12 @@ h2 {
   padding: 24px;
 }
 
-.scanner-page {
-  width: 100%;
-}
-
 .scanner-header {
   margin-bottom: 22px;
 }
 
-.scanner-header h2 {
-  margin-bottom: 8px;
-}
-
 .scanner-header p {
-  margin: 0;
+  margin: 8px 0 0;
 
   color: #587692;
 
@@ -891,25 +801,15 @@ h2 {
 
   border-radius: 18px;
 
-  background:
-    linear-gradient(
-      145deg,
-      #081b2e,
-      #030b15
-    );
+  background: #030b15;
 
   border: 1px solid #16486d;
 
-  box-shadow:
-    0 0 25px rgba(0, 120, 255, 0.08);
+  min-height: 280px;
 }
 
 #qr-reader {
   width: 100%;
-
-  overflow: hidden;
-
-  border-radius: 12px;
 }
 
 #qr-reader video {
@@ -930,10 +830,6 @@ h2 {
   display: none !important;
 }
 
-#qr-reader__status_span {
-  color: #55baff !important;
-}
-
 .scanner-status {
   margin-top: 15px;
 
@@ -952,7 +848,7 @@ h2 {
   font-size: 10px;
   font-weight: 700;
 
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
 }
 
 .scanner-start-btn,
@@ -1108,13 +1004,6 @@ h2 {
   font-size: 14px;
 }
 
-.modal-input:focus {
-  border-color: #2687bf;
-
-  box-shadow:
-    0 0 15px rgba(0, 140, 255, 0.08);
-}
-
 .modal-actions {
   display: flex;
 
@@ -1155,7 +1044,7 @@ h2 {
 }
 
 
-/* ---------- QR SHARE ---------- */
+/* ---------- QR ---------- */
 
 .qr-box {
   text-align: center;
@@ -1165,7 +1054,6 @@ h2 {
   color: #79caff;
 
   font-size: 14px;
-  font-weight: 600;
 
   margin-bottom: 18px;
 }
@@ -1186,9 +1074,6 @@ h2 {
   background: white;
 
   border-radius: 12px;
-
-  box-shadow:
-    0 0 25px rgba(0, 150, 255, 0.2);
 }
 
 #qrcode img {
@@ -1228,23 +1113,6 @@ h2 {
 }
 
 
-/* ---------- SCROLLBAR ---------- */
-
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #123754;
-
-  border-radius: 10px;
-}
-
-
 /* ---------- MOBILE ---------- */
 
 @media (max-width: 450px) {
@@ -1268,10 +1136,6 @@ h2 {
 
   .page {
     height: calc(100vh - 64px);
-  }
-
-  .top-nav {
-    gap: 2px;
   }
 
   .nav-btn {
