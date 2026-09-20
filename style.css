@@ -1,124 +1,1002 @@
 /* ---------- GLOBAL ---------- */
+
 * {
   box-sizing: border-box;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background: #6f8fdc;
 }
 
-/* ---------- BODY LAYOUT ---------- */
 body {
   min-height: 100vh;
 
+  background:
+    radial-gradient(circle at 50% 35%, rgba(0, 115, 255, 0.08), transparent 35%),
+    #01060d;
+
+  color: #e8f8ff;
+
+  overflow-x: hidden;
+}
+
+
+/* ---------- TECH BACKGROUND ---------- */
+
+body::before {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(0, 150, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 150, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 45px 45px;
+
+  z-index: -2;
+}
+
+
+body::after {
+  content: "";
+
+  position: fixed;
+
+  width: 600px;
+  height: 600px;
+
+  left: 50%;
+  top: 40%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: rgba(0, 100, 255, 0.07);
+
+  filter: blur(100px);
+
+  pointer-events: none;
+
+  z-index: -3;
+}
+
+
+/* ---------- APP ---------- */
+
+.app {
+  width: min(100%, 1000px);
+
+  min-height: 100vh;
+
+  margin: 0 auto;
+
+  padding: 24px 20px 50px;
+}
+
+
+/* ---------- NAVIGATION ---------- */
+
+.top-nav {
+  width: min(760px, 100%);
+
+  height: 70px;
+
+  margin: 0 auto 25px;
+
   display: flex;
-  justify-content: center;
+
   align-items: center;
 
-  background-color: #ddb3e3;
+  border: 1px solid rgba(0, 157, 255, 0.65);
+
+  border-radius: 40px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 25, 43, 0.95),
+      rgba(2, 9, 17, 0.95)
+    );
+
+  box-shadow:
+    0 0 25px rgba(0, 135, 255, 0.12),
+    inset 0 0 20px rgba(0, 140, 255, 0.04);
+
+  overflow: hidden;
 }
 
-/* ---------- APP CARD ---------- */
-.app {
-  background: white;
-  width: 320px;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+
+.nav-button {
+  flex: 1;
+
+  height: 100%;
+
+  border: none;
+
+  background: transparent;
+
+  color: #617e91;
+
+  font-size: 19px;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  transition: 0.25s ease;
 }
 
-/* ---------- TITLE ---------- */
+
+.nav-button:hover {
+  color: #b9eaff;
+}
+
+
+.nav-button.active {
+  color: #e9faff;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 137, 255, 0.25),
+      rgba(0, 70, 150, 0.10)
+    );
+
+  box-shadow:
+    inset 0 0 25px rgba(0, 145, 255, 0.12),
+    0 0 20px rgba(0, 145, 255, 0.14);
+}
+
+
+.nav-icon {
+  font-size: 25px;
+}
+
+
+.nav-divider {
+  width: 1px;
+
+  height: 32px;
+
+  background: rgba(70, 150, 200, 0.4);
+}
+
+
+/* ---------- PAGE ---------- */
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+
+/* ---------- CLOCK ---------- */
+
+.clock-section {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+
+.orbit-system {
+  position: relative;
+
+  width: min(650px, 90vw);
+
+  aspect-ratio: 1;
+
+  margin-top: 5px;
+}
+
+
+/* ---------- ORBITS ---------- */
+
+.outer-orbit,
+.inner-orbit {
+  position: absolute;
+
+  border-radius: 50%;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+
+.outer-orbit {
+  width: 90%;
+  height: 90%;
+
+  border: 1px solid rgba(40, 175, 255, 0.9);
+
+  box-shadow:
+    0 0 15px rgba(0, 145, 255, 0.2);
+}
+
+
+.inner-orbit {
+  width: 67%;
+  height: 67%;
+
+  border: 1px solid rgba(75, 200, 255, 0.7);
+
+  box-shadow:
+    0 0 15px rgba(0, 155, 255, 0.12);
+}
+
+
+/* ---------- CLOCK TICKS ---------- */
+
+.orbit-ticks {
+  position: absolute;
+
+  width: 97%;
+  height: 97%;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(100, 215, 255, 0.9) 0deg 0.6deg,
+      transparent 0.6deg 6deg
+    );
+
+  mask:
+    radial-gradient(
+      circle,
+      transparent 91%,
+      black 91.5%,
+      black 93%,
+      transparent 93.5%
+    );
+
+  -webkit-mask:
+    radial-gradient(
+      circle,
+      transparent 91%,
+      black 91.5%,
+      black 93%,
+      transparent 93.5%
+    );
+}
+
+
+/* ---------- CLOCK CENTER ---------- */
+
+.clock-core {
+  position: absolute;
+
+  width: 38%;
+  aspect-ratio: 1;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(15, 105, 160, 0.55),
+      rgba(1, 9, 17, 0.98) 65%
+    );
+
+  border: 2px solid rgba(55, 190, 255, 0.85);
+
+  box-shadow:
+    0 0 25px rgba(0, 160, 255, 0.55),
+    0 0 70px rgba(0, 100, 255, 0.2),
+    inset 0 0 30px rgba(0, 145, 255, 0.2);
+
+  z-index: 5;
+}
+
+
+.clock-core::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 7%;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(90, 215, 255, 0.2);
+}
+
+
+.clock-time {
+  position: relative;
+
+  z-index: 2;
+
+  font-size: clamp(36px, 7vw, 72px);
+
+  font-weight: 300;
+
+  letter-spacing: 2px;
+
+  color: #effcff;
+
+  text-shadow:
+    0 0 15px rgba(105, 220, 255, 0.8),
+    0 0 35px rgba(0, 150, 255, 0.3);
+}
+
+
+.clock-period {
+  position: relative;
+
+  z-index: 2;
+
+  margin-top: -5px;
+
+  font-size: clamp(15px, 2.5vw, 23px);
+
+  letter-spacing: 5px;
+
+  color: #7ed7ff;
+}
+
+
+/* ---------- PLANETS ---------- */
+
+.planet {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  border-radius: 50%;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 10;
+
+  transition:
+    left 0.15s linear,
+    top 0.15s linear;
+}
+
+
+.minute-planet {
+  width: 35px;
+  height: 35px;
+
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      #e8fbff,
+      #52d2ff 28%,
+      #0874b8 65%,
+      #031f38
+    );
+
+  box-shadow:
+    0 0 10px #24c4ff,
+    0 0 25px rgba(0, 170, 255, 0.9);
+}
+
+
+.second-planet {
+  width: 25px;
+  height: 25px;
+
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      #f0fbff,
+      #a2bbc9 30%,
+      #425c6a 65%,
+      #15232d
+    );
+
+  box-shadow:
+    0 0 8px rgba(155, 220, 255, 0.8),
+    0 0 20px rgba(100, 200, 255, 0.5);
+}
+
+
+/* ---------- DATE ---------- */
+
+.clock-date {
+  margin-top: -5px;
+
+  font-size: clamp(15px, 2.5vw, 23px);
+
+  letter-spacing: 5px;
+
+  text-align: center;
+
+  color: #8ddcff;
+
+  text-shadow:
+    0 0 15px rgba(0, 155, 255, 0.5);
+}
+
+
+/* ---------- LEGEND ---------- */
+
+.clock-legend {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 22px;
+
+  margin-top: 25px;
+
+  color: #79b5ce;
+
+  font-size: 14px;
+
+  letter-spacing: 1px;
+}
+
+
+.legend-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.legend-planet {
+  width: 15px;
+  height: 15px;
+
+  display: block;
+
+  border-radius: 50%;
+}
+
+
+.minute-legend {
+  background: #48ceff;
+
+  box-shadow:
+    0 0 10px #1bbdff;
+}
+
+
+.second-legend {
+  background: #91a7b4;
+
+  box-shadow:
+    0 0 8px #7eb8d2;
+}
+
+
+.legend-divider {
+  width: 1px;
+  height: 20px;
+
+  background: rgba(90, 165, 200, 0.4);
+}
+
+
+/* ---------- WEATHER ---------- */
+
+.weather-card {
+  width: min(880px, 100%);
+
+  min-height: 150px;
+
+  margin: 42px auto 0;
+
+  padding: 24px 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 25px;
+
+  border: 1px solid rgba(0, 150, 255, 0.7);
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 24, 41, 0.94),
+      rgba(2, 9, 17, 0.97)
+    );
+
+  box-shadow:
+    0 0 25px rgba(0, 130, 255, 0.1),
+    inset 0 0 30px rgba(0, 120, 255, 0.04);
+}
+
+
+.weather-icon {
+  width: 85px;
+
+  font-size: 55px;
+
+  text-align: center;
+
+  filter:
+    drop-shadow(0 0 12px rgba(0, 180, 255, 0.5));
+}
+
+
+.weather-info {
+  flex: 1;
+}
+
+
+.temperature {
+  font-size: 44px;
+
+  font-weight: 300;
+
+  color: #e7faff;
+}
+
+
+.weather-description {
+  margin-top: 2px;
+
+  font-size: 19px;
+
+  color: #86c4dc;
+}
+
+
+.weather-details {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-top: 12px;
+
+  color: #6f9caf;
+
+  font-size: 14px;
+}
+
+
+.weather-details strong {
+  color: #b9eafb;
+
+  font-weight: 500;
+}
+
+
+.weather-divider {
+  width: 1px;
+
+  height: 18px;
+
+  background: rgba(90, 160, 190, 0.4);
+}
+
+
+.weather-location {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding-left: 28px;
+
+  border-left: 1px solid rgba(74, 155, 195, 0.35);
+
+  color: #79b5ce;
+
+  font-size: 16px;
+}
+
+
+.location-icon {
+  font-size: 24px;
+
+  color: #6dd2ff;
+
+  text-shadow:
+    0 0 10px #009cff;
+}
+
+
+/* ---------- LISTORE ---------- */
+
+.listore-page {
+  width: min(600px, 100%);
+
+  margin: 0 auto;
+}
+
+
 h1 {
   text-align: center;
-  margin-bottom: 16px;
+
+  margin: 15px 0 25px;
+
+  font-size: 40px;
+
+  color: #e9faff;
+
+  text-shadow:
+    0 0 15px rgba(0, 150, 255, 0.5);
 }
 
+
 /* ---------- FORM ---------- */
+
 form {
   display: flex;
+
   flex-direction: column;
+
   gap: 10px;
 }
 
-/* ---------- INPUT ---------- */
+
 input {
-  padding: 12px;
+  padding: 14px;
+
   font-size: 16px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(0, 145, 230, 0.6);
+
+  outline: none;
+
+  background: rgba(3, 16, 27, 0.95);
+
+  color: #e9faff;
+
+  box-shadow:
+    inset 0 0 15px rgba(0, 130, 255, 0.04);
 }
+
+
+input::placeholder {
+  color: #527487;
+}
+
+
+input:focus {
+  border-color: #1ab0ff;
+
+  box-shadow:
+    0 0 12px rgba(0, 153, 255, 0.15);
+}
+
 
 /* ---------- ADD BUTTON ---------- */
-button {
-  padding: 12px;
+
+form button {
+  padding: 13px;
+
   font-size: 16px;
-  border-radius: 10px;
-  border: none;
-  background: #d491ed;
-  color: white;
+
+  border-radius: 12px;
+
+  border: 1px solid #119eff;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 143, 240, 0.35),
+      rgba(0, 85, 160, 0.25)
+    );
+
+  color: #c9f2ff;
+
   cursor: pointer;
-  transition: transform 0.1s ease, background 0.2s ease;
+
+  transition:
+    transform 0.1s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-button:active {
+
+form button:hover {
+  background:
+    rgba(0, 145, 255, 0.35);
+
+  box-shadow:
+    0 0 15px rgba(0, 150, 255, 0.2);
+}
+
+
+form button:active {
   transform: scale(0.97);
 }
 
+
 /* ---------- LIST ---------- */
+
 ul {
   list-style: none;
+
   padding: 0;
-  margin-top: 16px;
+
+  margin-top: 18px;
 }
+
 
 /* ---------- LIST ITEM ---------- */
+
 li {
-  background: #eef2ff;
-  margin-bottom: 8px;
-  padding: 12px;
-  border-radius: 12px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(6, 27, 43, 0.95),
+      rgba(3, 16, 27, 0.95)
+    );
+
+  margin-bottom: 9px;
+
+  padding: 9px;
+
+  border-radius: 13px;
+
+  border: 1px solid rgba(0, 132, 210, 0.4);
 
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+
+li:hover {
+  border-color: rgba(0, 160, 255, 0.65);
+
+  box-shadow:
+    0 0 15px rgba(0, 130, 255, 0.08);
+}
+
 
 /* ---------- ITEM TEXT ---------- */
+
 li span {
   flex: 1;
+
+  padding: 7px;
+
   cursor: pointer;
+
+  color: #d7f2fb;
 }
+
 
 /* ---------- DONE STATE ---------- */
+
 li span.done {
   text-decoration: line-through;
-  opacity: 0.6;
+
+  opacity: 0.45;
 }
 
+
 /* ---------- DELETE BUTTON ---------- */
+
 .delete-btn {
-  background: #cf5151;
-  color: white;
-  border: none;
+  background: rgba(200, 45, 65, 0.2);
+
+  color: #ff7182;
+
+  border: 1px solid rgba(255, 70, 90, 0.3);
 
   width: 36px;
+
   height: 36px;
 
   border-radius: 10px;
-  font-size: 18px;
+
+  font-size: 17px;
+
   cursor: pointer;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
-  transition: transform 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    background 0.2s ease;
 }
+
+
+.delete-btn:hover {
+  background: rgba(255, 50, 75, 0.25);
+}
+
 
 .delete-btn:active {
   transform: scale(0.9);
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 650px) {
+
+  .app {
+    padding: 15px 13px 35px;
+  }
+
+
+  .top-nav {
+    height: 62px;
+
+    margin-bottom: 10px;
+  }
+
+
+  .nav-button {
+    font-size: 16px;
+  }
+
+
+  .nav-icon {
+    font-size: 22px;
+  }
+
+
+  .orbit-system {
+    width: 94vw;
+  }
+
+
+  .clock-date {
+    font-size: 14px;
+
+    letter-spacing: 3px;
+  }
+
+
+  .clock-legend {
+    margin-top: 18px;
+
+    gap: 15px;
+
+    font-size: 12px;
+  }
+
+
+  .weather-card {
+    margin-top: 30px;
+
+    padding: 20px;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+  }
+
+
+  .weather-icon {
+    width: 60px;
+
+    font-size: 43px;
+  }
+
+
+  .temperature {
+    font-size: 34px;
+  }
+
+
+  .weather-description {
+    font-size: 16px;
+  }
+
+
+  .weather-details {
+    gap: 10px;
+
+    font-size: 12px;
+  }
+
+
+  .weather-location {
+    width: 100%;
+
+    padding-left: 0;
+
+    padding-top: 14px;
+
+    border-left: none;
+
+    border-top: 1px solid rgba(74, 155, 195, 0.25);
+  }
+
+
+  h1 {
+    font-size: 34px;
+  }
+
+}
+
+
+@media (max-width: 400px) {
+
+  .clock-time {
+    font-size: 31px;
+  }
+
+
+  .clock-period {
+    font-size: 13px;
+  }
+
+
+  .minute-planet {
+    width: 29px;
+    height: 29px;
+  }
+
+
+  .second-planet {
+    width: 21px;
+    height: 21px;
+  }
+
 }
