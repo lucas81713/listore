@@ -1,2073 +1,1511 @@
-const homeTab = document.getElementById("homeTab");
-const listoreTab = document.getElementById("listoreTab");
-const scanTab = document.getElementById("scanTab");
+const STORAGE_KEY = "listoreLists";
 
-const homePage = document.getElementById("homePage");
-const listorePage = document.getElementById("listorePage");
-const scanPage = document.getElementById("scanPage");
-
-const listsView = document.getElementById("listsView");
-const singleListView = document.getElementById("singleListView");
-
-const listsContainer = document.getElementById("listsContainer");
-const emptyLists = document.getElementById("emptyLists");
-
-const newListBtn = document.getElementById("newListBtn");
-
-const createListModal =
-  document.getElementById("createListModal");
-
-const closeCreateModal =
-  document.getElementById("closeCreateModal");
-
-const cancelCreate =
-  document.getElementById("cancelCreate");
-
-const confirmCreate =
-  document.getElementById("confirmCreate");
-
-const newListName =
-  document.getElementById("newListName");
-
-const renameListModal =
-  document.getElementById("renameListModal");
-
-const closeRenameModal =
-  document.getElementById("closeRenameModal");
-
-const cancelRename =
-  document.getElementById("cancelRename");
-
-const confirmRename =
-  document.getElementById("confirmRename");
-
-const renameListInput =
-  document.getElementById("renameListInput");
-
-const backToLists =
-  document.getElementById("backToLists");
-
-const currentListName =
-  document.getElementById("currentListName");
-
-const form =
-  document.getElementById("listForm");
-
-const input =
-  document.getElementById("itemInput");
-
-const list =
-  document.getElementById("list");
-
-const emptyItems =
-  document.getElementById("emptyItems");
-
-const shareListBtn =
-  document.getElementById("shareListBtn");
-
-const qrModal =
-  document.getElementById("qrModal");
-
-const closeQrModal =
-  document.getElementById("closeQrModal");
-
-const qrListName =
-  document.getElementById("qrListName");
-
-const qrCode =
-  document.getElementById("qrcode");
-
-const copyShareLink =
-  document.getElementById("copyShareLink");
-
-const minutePlanet =
-  document.getElementById("minutePlanet");
-
-const secondPlanet =
-  document.getElementById("secondPlanet");
-
-const qrReader =
-  document.getElementById("qr-reader");
-
-const scannerStatus =
-  document.getElementById("scannerStatus");
-
-const startScannerBtn =
-  document.getElementById("startScannerBtn");
-
-const stopScannerBtn =
-  document.getElementById("stopScannerBtn");
-
-
-/* ---------- DATA ---------- */
-
-let lists = [];
-
+let lists = {};
 let currentListId = null;
-
-let renameTargetId = null;
-
-let qrScanner = null;
-
+let scanner = null;
 let scannerRunning = false;
 
-let scanLocked = false;
 
-const LISTS_STORAGE_KEY = "listoreLists";
-
-const OLD_STORAGE_KEY = "listoreData";
-
-
-/* ---------- ID ---------- */
-
-function generateId() {
-
-  return (
-    Date.now().toString(36) +
-    Math.random()
-      .toString(36)
-      .substring(2, 8)
-  );
-
-}
-
-
-/* ---------- SAVE ---------- */
-
-function saveLists() {
-
-  localStorage.setItem(
-    LISTS_STORAGE_KEY,
-    JSON.stringify(lists)
-  );
-
-}
-
-
-/* ---------- LOAD ---------- */
+/* =========================================================
+   STORAGE
+========================================================= */
 
 function loadLists() {
 
-  const savedLists =
-    localStorage.getItem(
-      LISTS_STORAGE_KEY
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved) {
+
+        try {
+
+            lists = JSON.parse(saved);
+
+        } catch {
+
+            lists = {};
+
+        }
+
+    }
+
+    if (!Object.keys(lists).length) {
+
+        const oldData = localStorage.getItem("listoreData");
+
+        lists = {
+
+            myList: {
+                name: "My List",
+                items: oldData ? JSON.parse(oldData) : []
+            }
+
+        };
+
+        saveLists();
+
+    }
+
+}
+
+
+function saveLists() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(lists)
     );
 
-
-  if (savedLists) {
-
-    try {
-
-      lists =
-        JSON.parse(savedLists);
-
-    } catch {
-
-      lists = [];
-
-    }
-
-  } else {
-
-    const oldData =
-      localStorage.getItem(
-        OLD_STORAGE_KEY
-      );
-
-
-    if (oldData) {
-
-      try {
-
-        const oldItems =
-          JSON.parse(oldData);
-
-
-        lists = [
-
-          {
-            id: generateId(),
-
-            name: "My List",
-
-            items: oldItems
-
-          }
-
-        ];
-
-      } catch {
-
-        lists = [];
-
-      }
-
-    } else {
-
-      lists = [];
-
-    }
-
-
-    saveLists();
-
-  }
-
 }
 
 
-/* ---------- NAVIGATION ---------- */
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
 
-function setActiveTab(tab) {
+const navButtons =
+    document.querySelectorAll(".nav-button");
 
-  homeTab.classList.remove(
-    "active"
-  );
-
-  listoreTab.classList.remove(
-    "active"
-  );
-
-  scanTab.classList.remove(
-    "active"
-  );
-
-  tab.classList.add(
-    "active"
-  );
-
-}
+const pages =
+    document.querySelectorAll(".page");
 
 
-function hidePages() {
+navButtons.forEach(button => {
 
-  homePage.classList.remove(
-    "active-page"
-  );
+    button.addEventListener("click", () => {
 
-  listorePage.classList.remove(
-    "active-page"
-  );
+        const pageId =
+            button.dataset.page;
 
-  scanPage.classList.remove(
-    "active-page"
-  );
+        navButtons.forEach(btn =>
+            btn.classList.remove("active")
+        );
 
-}
+        pages.forEach(page =>
+            page.classList.remove("active-page")
+        );
 
+        button.classList.add("active");
 
-function showHome() {
+        document
+            .getElementById(pageId)
+            .classList.add("active-page");
 
-  stopScanner();
+        if (pageId === "scanPage") {
 
-  setActiveTab(homeTab);
+            scannerStatus("Camera is ready.");
 
-  hidePages();
+        }
 
-  homePage.classList.add(
-    "active-page"
-  );
+    });
 
-}
-
-
-function showListore() {
-
-  stopScanner();
-
-  setActiveTab(listoreTab);
-
-  hidePages();
-
-  listorePage.classList.add(
-    "active-page"
-  );
-
-  showLists();
-
-}
+});
 
 
-function showScanner() {
-
-  setActiveTab(scanTab);
-
-  hidePages();
-
-  scanPage.classList.add(
-    "active-page"
-  );
-
-  scannerStatus.textContent =
-    "READY TO SCAN";
-
-}
-
-
-homeTab.addEventListener(
-  "click",
-  showHome
-);
-
-listoreTab.addEventListener(
-  "click",
-  showListore
-);
-
-scanTab.addEventListener(
-  "click",
-  showScanner
-);
-
-
-/* ---------- LISTS ---------- */
-
-function showLists() {
-
-  listsView.classList.remove(
-    "hidden"
-  );
-
-  singleListView.classList.add(
-    "hidden"
-  );
-
-  renderLists();
-
-}
-
+/* =========================================================
+   LIST DISPLAY
+========================================================= */
 
 function renderLists() {
 
-  listsContainer.innerHTML = "";
+    const container =
+        document.getElementById("listsContainer");
+
+    container.innerHTML = "";
+
+    Object.entries(lists).forEach(([id, list]) => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "list-card";
+
+        card.innerHTML = `
+
+            <div class="list-card-top">
+
+                <div class="list-card-icon">
+                    ☷
+                </div>
+
+                <div class="list-card-menu">
+
+                    <button
+                        class="rename-list"
+                        data-id="${id}"
+                        title="Rename">
+                        ✎
+                    </button>
+
+                    <button
+                        class="delete-list"
+                        data-id="${id}"
+                        title="Delete">
+                        ×
+                    </button>
+
+                </div>
+
+            </div>
+
+            <h3>
+                ${escapeHtml(list.name)}
+            </h3>
+
+            <p>
+                ${list.items.length}
+                ${list.items.length === 1 ? "item" : "items"}
+            </p>
+
+        `;
 
 
-  emptyLists.classList.toggle(
-    "hidden",
-    lists.length !== 0
-  );
+        card.addEventListener("click", event => {
+
+            if (
+                event.target.closest(".rename-list") ||
+                event.target.closest(".delete-list")
+            ) {
+                return;
+            }
+
+            openList(id);
+
+        });
 
 
-  lists.forEach(
-    currentList => {
+        container.appendChild(card);
 
-      const card =
-        document.createElement(
-          "div"
-        );
-
-      card.className =
-        "list-card";
+    });
 
 
-      const main =
-        document.createElement(
-          "div"
-        );
+    document.querySelectorAll(".rename-list")
+        .forEach(button => {
 
-      main.className =
-        "list-card-main";
+            button.addEventListener("click", event => {
 
+                event.stopPropagation();
 
-      const info =
-        document.createElement(
-          "div"
-        );
+                openRenameModal(
+                    button.dataset.id
+                );
 
+            });
 
-      const name =
-        document.createElement(
-          "div"
-        );
-
-      name.className =
-        "list-card-name";
-
-      name.textContent =
-        currentList.name;
+        });
 
 
-      const count =
-        document.createElement(
-          "div"
-        );
+    document.querySelectorAll(".delete-list")
+        .forEach(button => {
 
-      count.className =
-        "list-card-count";
+            button.addEventListener("click", event => {
 
+                event.stopPropagation();
 
-      const total =
-        currentList.items.length;
+                deleteList(
+                    button.dataset.id
+                );
 
+            });
 
-      const completed =
-        currentList.items.filter(
-          item => item.done
-        ).length;
-
-
-      count.textContent =
-        `${total} ITEM${total === 1 ? "" : "S"} • ${completed} COMPLETE`;
-
-
-      info.appendChild(name);
-
-      info.appendChild(count);
-
-
-      const actions =
-        document.createElement(
-          "div"
-        );
-
-      actions.className =
-        "list-card-actions";
-
-
-      const renameButton =
-        document.createElement(
-          "button"
-        );
-
-      renameButton.className =
-        "card-action";
-
-      renameButton.textContent =
-        "✎";
-
-
-      renameButton.addEventListener(
-        "click",
-        event => {
-
-          event.stopPropagation();
-
-          openRenameModal(
-            currentList.id
-          );
-
-        }
-      );
-
-
-      const deleteButton =
-        document.createElement(
-          "button"
-        );
-
-      deleteButton.className =
-        "card-action card-delete";
-
-      deleteButton.textContent =
-        "×";
-
-
-      deleteButton.addEventListener(
-        "click",
-        event => {
-
-          event.stopPropagation();
-
-          deleteList(
-            currentList.id
-          );
-
-        }
-      );
-
-
-      actions.appendChild(
-        renameButton
-      );
-
-      actions.appendChild(
-        deleteButton
-      );
-
-
-      main.appendChild(info);
-
-      main.appendChild(actions);
-
-      card.appendChild(main);
-
-
-      card.addEventListener(
-        "click",
-        () => {
-
-          openList(
-            currentList.id
-          );
-
-        }
-      );
-
-
-      listsContainer.appendChild(
-        card
-      );
-
-    }
-  );
+        });
 
 }
 
 
-/* ---------- CREATE LIST ---------- */
+/* =========================================================
+   CREATE LIST
+========================================================= */
 
-function openCreateModal() {
+document
+    .getElementById("newListButton")
+    .addEventListener("click", () => {
 
-  newListName.value = "";
+        openModal("newListModal");
 
-  createListModal.classList.remove(
-    "hidden"
-  );
+        setTimeout(() => {
 
-  setTimeout(
-    () => newListName.focus(),
-    50
-  );
+            document
+                .getElementById("newListName")
+                .focus();
 
-}
+        }, 100);
+
+    });
 
 
-function closeCreateListModal() {
+document
+    .getElementById("createListConfirm")
+    .addEventListener("click", createList);
 
-  createListModal.classList.add(
-    "hidden"
-  );
 
-}
+document
+    .getElementById("newListName")
+    .addEventListener("keydown", event => {
+
+        if (event.key === "Enter") {
+
+            createList();
+
+        }
+
+    });
 
 
 function createList() {
 
-  const name =
-    newListName.value.trim();
+    const input =
+        document.getElementById("newListName");
 
+    const name =
+        input.value.trim();
 
-  if (!name) {
+    if (!name) return;
 
-    return;
+    const id =
+        "list_" +
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .slice(2, 7);
 
-  }
+    lists[id] = {
 
+        name,
 
-  const newList = {
+        items: []
 
-    id: generateId(),
-
-    name: name,
-
-    items: []
-
-  };
-
-
-  lists.push(newList);
-
-  saveLists();
-
-  closeCreateListModal();
-
-  renderLists();
-
-  openList(
-    newList.id
-  );
-
-}
-
-
-newListBtn.addEventListener(
-  "click",
-  openCreateModal
-);
-
-closeCreateModal.addEventListener(
-  "click",
-  closeCreateListModal
-);
-
-cancelCreate.addEventListener(
-  "click",
-  closeCreateListModal
-);
-
-confirmCreate.addEventListener(
-  "click",
-  createList
-);
-
-newListName.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key === "Enter") {
-
-      createList();
-
-    }
-
-  }
-);
-
-
-/* ---------- DELETE ---------- */
-
-function deleteList(id) {
-
-  const target =
-    lists.find(
-      item => item.id === id
-    );
-
-
-  if (!target) {
-
-    return;
-
-  }
-
-
-  if (
-    !confirm(
-      `Delete "${target.name}"? This cannot be undone.`
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  lists =
-    lists.filter(
-      item => item.id !== id
-    );
-
-
-  saveLists();
-
-  renderLists();
-
-}
-
-
-/* ---------- RENAME ---------- */
-
-function openRenameModal(id) {
-
-  const target =
-    lists.find(
-      item => item.id === id
-    );
-
-
-  if (!target) {
-
-    return;
-
-  }
-
-
-  renameTargetId = id;
-
-  renameListInput.value =
-    target.name;
-
-
-  renameListModal.classList.remove(
-    "hidden"
-  );
-
-
-  setTimeout(
-    () => {
-
-      renameListInput.focus();
-
-      renameListInput.select();
-
-    },
-    50
-  );
-
-}
-
-
-function closeRenameListModal() {
-
-  renameListModal.classList.add(
-    "hidden"
-  );
-
-  renameTargetId = null;
-
-}
-
-
-function renameList() {
-
-  if (!renameTargetId) {
-
-    return;
-
-  }
-
-
-  const name =
-    renameListInput.value.trim();
-
-
-  if (!name) {
-
-    return;
-
-  }
-
-
-  const target =
-    lists.find(
-      item =>
-        item.id === renameTargetId
-    );
-
-
-  if (!target) {
-
-    return;
-
-  }
-
-
-  target.name = name;
-
-  saveLists();
-
-  closeRenameListModal();
-
-  renderLists();
-
-
-  if (
-    currentListId === target.id
-  ) {
-
-    currentListName.textContent =
-      target.name;
-
-  }
-
-}
-
-
-closeRenameModal.addEventListener(
-  "click",
-  closeRenameListModal
-);
-
-cancelRename.addEventListener(
-  "click",
-  closeRenameListModal
-);
-
-confirmRename.addEventListener(
-  "click",
-  renameList
-);
-
-renameListInput.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key === "Enter") {
-
-      renameList();
-
-    }
-
-  }
-);
-
-
-/* ---------- OPEN LIST ---------- */
-
-function openList(id) {
-
-  const target =
-    lists.find(
-      item => item.id === id
-    );
-
-
-  if (!target) {
-
-    return;
-
-  }
-
-
-  currentListId = id;
-
-
-  listsView.classList.add(
-    "hidden"
-  );
-
-  singleListView.classList.remove(
-    "hidden"
-  );
-
-
-  currentListName.textContent =
-    target.name;
-
-
-  renderItems();
-
-}
-
-
-/* ---------- ITEMS ---------- */
-
-function getCurrentList() {
-
-  return lists.find(
-    item =>
-      item.id === currentListId
-  );
-
-}
-
-
-function renderItems() {
-
-  const target =
-    getCurrentList();
-
-
-  if (!target) {
-
-    return;
-
-  }
-
-
-  list.innerHTML = "";
-
-
-  emptyItems.classList.toggle(
-    "hidden",
-    target.items.length !== 0
-  );
-
-
-  target.items.forEach(
-    item =>
-      createItemElement(item)
-  );
-
-}
-
-
-function createItemElement(item) {
-
-  const li =
-    document.createElement(
-      "li"
-    );
-
-
-  const span =
-    document.createElement(
-      "span"
-    );
-
-
-  span.textContent =
-    item.text;
-
-
-  if (item.done) {
-
-    span.classList.add(
-      "done"
-    );
-
-  }
-
-
-  span.addEventListener(
-    "click",
-    () => {
-
-      item.done =
-        !item.done;
-
-      span.classList.toggle(
-        "done"
-      );
-
-      saveLists();
-
-    }
-  );
-
-
-  const del =
-    document.createElement(
-      "button"
-    );
-
-
-  del.textContent =
-    "✕";
-
-  del.className =
-    "delete-btn";
-
-
-  del.addEventListener(
-    "click",
-    event => {
-
-      event.stopPropagation();
-
-
-      const target =
-        getCurrentList();
-
-
-      if (!target) {
-
-        return;
-
-      }
-
-
-      target.items =
-        target.items.filter(
-          currentItem =>
-            currentItem !== item
-        );
-
-
-      saveLists();
-
-      renderItems();
-
-    }
-  );
-
-
-  li.appendChild(span);
-
-  li.appendChild(del);
-
-  list.appendChild(li);
-
-}
-
-
-form.addEventListener(
-  "submit",
-  event => {
-
-    event.preventDefault();
-
-
-    const text =
-      input.value.trim();
-
-
-    if (!text) {
-
-      return;
-
-    }
-
-
-    const target =
-      getCurrentList();
-
-
-    if (!target) {
-
-      return;
-
-    }
-
-
-    target.items.unshift({
-
-      text: text,
-
-      done: false
-
-    });
-
+    };
 
     saveLists();
 
     input.value = "";
 
+    closeModal("newListModal");
+
+    renderLists();
+
+    openList(id);
+
+}
+
+
+/* =========================================================
+   OPEN LIST
+========================================================= */
+
+function openList(id) {
+
+    if (!lists[id]) return;
+
+    currentListId = id;
+
+    document
+        .getElementById("listsContainer")
+        .classList.add("hidden");
+
+    document
+        .querySelector(".page-heading")
+        .classList.add("hidden");
+
+    document
+        .getElementById("individualList")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("currentListName")
+        .textContent = lists[id].name;
+
     renderItems();
 
-    input.focus();
-
-  }
-);
+}
 
 
-backToLists.addEventListener(
-  "click",
-  () => {
+/* =========================================================
+   BACK TO LISTS
+========================================================= */
 
-    currentListId = null;
+document
+    .getElementById("backToLists")
+    .addEventListener("click", () => {
 
-    showLists();
+        currentListId = null;
 
-  }
-);
+        document
+            .getElementById("individualList")
+            .classList.add("hidden");
+
+        document
+            .getElementById("listsContainer")
+            .classList.remove("hidden");
+
+        document
+            .querySelector(".page-heading")
+            .classList.remove("hidden");
+
+        renderLists();
+
+    });
 
 
-/* ---------- QR DATA ---------- */
+/* =========================================================
+   RENAME
+========================================================= */
 
-function encodeList(listData) {
+document
+    .getElementById("renameListButton")
+    .addEventListener("click", () => {
 
-  const json =
-    JSON.stringify(listData);
+        if (!currentListId) return;
+
+        openRenameModal(currentListId);
+
+    });
 
 
-  return btoa(
-    encodeURIComponent(json)
-      .replace(
-        /%([0-9A-F]{2})/g,
-        (match, p1) =>
-          String.fromCharCode(
-            parseInt(p1, 16)
-          )
-      )
-  );
+function openRenameModal(id) {
+
+    const list = lists[id];
+
+    if (!list) return;
+
+    document
+        .getElementById("renameInput")
+        .value = list.name;
+
+    document
+        .getElementById("renameConfirm")
+        .dataset.id = id;
+
+    openModal("renameModal");
+
+    setTimeout(() => {
+
+        document
+            .getElementById("renameInput")
+            .focus();
+
+    }, 100);
+
+}
+
+
+document
+    .getElementById("renameConfirm")
+    .addEventListener("click", () => {
+
+        const id =
+            document
+                .getElementById("renameConfirm")
+                .dataset.id;
+
+        const name =
+            document
+                .getElementById("renameInput")
+                .value
+                .trim();
+
+        if (!name || !lists[id]) return;
+
+        lists[id].name = name;
+
+        saveLists();
+
+        closeModal("renameModal");
+
+        renderLists();
+
+        if (currentListId === id) {
+
+            document
+                .getElementById("currentListName")
+                .textContent = name;
+
+        }
+
+    });
+
+
+/* =========================================================
+   DELETE LIST
+========================================================= */
+
+function deleteList(id) {
+
+    if (!lists[id]) return;
+
+    const confirmed =
+        confirm(
+            `Delete "${lists[id].name}"?`
+        );
+
+    if (!confirmed) return;
+
+    delete lists[id];
+
+    if (!Object.keys(lists).length) {
+
+        const newId =
+            "list_" + Date.now();
+
+        lists[newId] = {
+
+            name: "My List",
+
+            items: []
+
+        };
+
+    }
+
+    saveLists();
+
+    renderLists();
+
+}
+
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+document
+    .getElementById("itemForm")
+    .addEventListener("submit", event => {
+
+        event.preventDefault();
+
+        if (!currentListId) return;
+
+        const input =
+            document.getElementById("itemInput");
+
+        const text =
+            input.value.trim();
+
+        if (!text) return;
+
+        lists[currentListId].items.unshift({
+
+            text,
+
+            done: false
+
+        });
+
+        saveLists();
+
+        input.value = "";
+
+        renderItems();
+
+    });
+
+
+function renderItems() {
+
+    const listElement =
+        document.getElementById("list");
+
+    listElement.innerHTML = "";
+
+    if (!currentListId) return;
+
+    const items =
+        lists[currentListId].items;
+
+
+    items.forEach((item, index) => {
+
+        const li =
+            document.createElement("li");
+
+        li.className =
+            "list-item" +
+            (item.done ? " done" : "");
+
+
+        const span =
+            document.createElement("span");
+
+        span.textContent = item.text;
+
+
+        span.addEventListener("click", () => {
+
+            item.done = !item.done;
+
+            saveLists();
+
+            renderItems();
+
+        });
+
+
+        const deleteButton =
+            document.createElement("button");
+
+        deleteButton.className =
+            "delete-item";
+
+        deleteButton.textContent = "×";
+
+
+        deleteButton.addEventListener("click", () => {
+
+            lists[currentListId]
+                .items
+                .splice(index, 1);
+
+            saveLists();
+
+            renderItems();
+
+        });
+
+
+        li.appendChild(span);
+
+        li.appendChild(deleteButton);
+
+        listElement.appendChild(li);
+
+    });
+
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+function openModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.add("show");
+
+}
+
+
+function closeModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.remove("show");
+
+}
+
+
+document
+    .querySelectorAll("[data-close]")
+    .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            closeModal(
+                button.dataset.close
+            );
+
+        });
+
+    });
+
+
+document
+    .querySelectorAll(".modal")
+    .forEach(modal => {
+
+        modal.addEventListener("click", event => {
+
+            if (event.target === modal) {
+
+                modal.classList.remove("show");
+
+            }
+
+        });
+
+    });
+
+
+/* =========================================================
+   QR SHARING
+========================================================= */
+
+document
+    .getElementById("shareListButton")
+    .addEventListener("click", () => {
+
+        if (!currentListId) return;
+
+        const list =
+            lists[currentListId];
+
+        const payload =
+            encodeList(list);
+
+        const shareUrl =
+            window.location.href.split("#")[0] +
+            "#share=" +
+            payload;
+
+        document
+            .getElementById("shareListTitle")
+            .textContent = list.name;
+
+
+        const qrContainer =
+            document.getElementById("qrCode");
+
+        qrContainer.innerHTML = "";
+
+
+        new QRCode(qrContainer, {
+
+            text: shareUrl,
+
+            width: 180,
+
+            height: 180,
+
+            colorDark: "#050914",
+
+            colorLight: "#ffffff",
+
+            correctLevel:
+                QRCode.CorrectLevel.M
+
+        });
+
+
+        document
+            .getElementById("copyShareLink")
+            .dataset.link = shareUrl;
+
+
+        openModal("shareModal");
+
+    });
+
+
+document
+    .getElementById("copyShareLink")
+    .addEventListener("click", async () => {
+
+        const link =
+            document
+                .getElementById("copyShareLink")
+                .dataset.link;
+
+        try {
+
+            await navigator.clipboard.writeText(link);
+
+            const button =
+                document.getElementById("copyShareLink");
+
+            const oldText =
+                button.textContent;
+
+            button.textContent =
+                "✓ COPIED";
+
+            setTimeout(() => {
+
+                button.textContent =
+                    oldText;
+
+            }, 1500);
+
+        } catch {
+
+            alert("Unable to copy the link.");
+
+        }
+
+    });
+
+
+function encodeList(list) {
+
+    const json =
+        JSON.stringify(list);
+
+    return btoa(
+        encodeURIComponent(json)
+            .replace(
+                /%([0-9A-F]{2})/g,
+                (_, p1) =>
+                    String.fromCharCode(
+                        parseInt(p1, 16)
+                    )
+            )
+    );
 
 }
 
 
 function decodeList(encoded) {
 
-  const binary =
-    atob(encoded);
+    const binary =
+        atob(encoded);
 
+    const percentEncoded =
+        Array.from(binary)
+            .map(char =>
+                "%" +
+                char
+                    .charCodeAt(0)
+                    .toString(16)
+                    .padStart(2, "0")
+            )
+            .join("");
 
-  const percentEncoded =
-    Array.from(binary)
-      .map(
-        character =>
-          "%" +
-          character
-            .charCodeAt(0)
-            .toString(16)
-            .padStart(2, "0")
-      )
-      .join("");
-
-
-  return JSON.parse(
-    decodeURIComponent(
-      percentEncoded
-    )
-  );
+    return JSON.parse(
+        decodeURIComponent(percentEncoded)
+    );
 
 }
 
 
-function getShareLink(target) {
-
-  const encoded =
-    encodeList({
-
-      name: target.name,
-
-      items: target.items
-
-    });
-
-
-  return (
-    window.location.origin +
-    window.location.pathname +
-    "#share=" +
-    encodeURIComponent(encoded)
-  );
-
-}
-
-
-/* ---------- SHOW QR ---------- */
-
-shareListBtn.addEventListener(
-  "click",
-  () => {
-
-    const target =
-      getCurrentList();
-
-
-    if (!target) {
-
-      return;
-
-    }
-
-
-    qrListName.textContent =
-      target.name;
-
-
-    qrCode.innerHTML = "";
-
-
-    const link =
-      getShareLink(target);
-
-
-    if (
-      typeof QRCode ===
-      "undefined"
-    ) {
-
-      alert(
-        "QR code generator could not load. Please check your internet connection."
-      );
-
-      return;
-
-    }
-
-
-    new QRCode(
-      qrCode,
-      {
-
-        text: link,
-
-        width: 200,
-
-        height: 200,
-
-        colorDark: "#000000",
-
-        colorLight: "#ffffff",
-
-        correctLevel:
-          QRCode.CorrectLevel.M
-
-      }
-    );
-
-
-    qrModal.classList.remove(
-      "hidden"
-    );
-
-  }
-);
-
-
-closeQrModal.addEventListener(
-  "click",
-  () => {
-
-    qrModal.classList.add(
-      "hidden"
-    );
-
-  }
-);
-
-
-/* ---------- COPY QR LINK ---------- */
-
-copyShareLink.addEventListener(
-  "click",
-  async () => {
-
-    const target =
-      getCurrentList();
-
-
-    if (!target) {
-
-      return;
-
-    }
-
-
-    const link =
-      getShareLink(target);
-
-
-    try {
-
-      await navigator.clipboard
-        .writeText(link);
-
-
-      copyShareLink.textContent =
-        "COPIED!";
-
-
-      setTimeout(
-        () => {
-
-          copyShareLink.textContent =
-            "COPY SHARE LINK";
-
-        },
-        1500
-      );
-
-    } catch {
-
-      prompt(
-        "Copy this link:",
-        link
-      );
-
-    }
-
-  }
-);
-
-
-/* ---------- IMPORT HASH ---------- */
+/* =========================================================
+   IMPORT SHARE LINK
+========================================================= */
 
 function importSharedListFromHash() {
 
-  const hash =
-    window.location.hash;
+    const hash =
+        window.location.hash;
 
-
-  if (
-    !hash.startsWith(
-      "#share="
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  try {
-
-    const encoded =
-      decodeURIComponent(
-        hash.substring(7)
-      );
-
-
-    const sharedList =
-      decodeList(encoded);
-
-
-    if (
-      !sharedList ||
-      typeof sharedList.name !== "string" ||
-      !Array.isArray(sharedList.items)
-    ) {
-
-      throw new Error(
-        "Invalid list"
-      );
-
+    if (!hash.startsWith("#share=")) {
+        return;
     }
 
+    try {
 
-    const importedList = {
+        const encoded =
+            hash.substring(7);
 
-      id: generateId(),
-
-      name: sharedList.name,
-
-      items: sharedList.items
-
-    };
+        const sharedList =
+            decodeList(encoded);
 
 
-    lists.push(
-      importedList
-    );
+        if (
+            !sharedList ||
+            typeof sharedList.name !== "string" ||
+            !Array.isArray(sharedList.items)
+        ) {
+
+            throw new Error("Invalid list");
+
+        }
 
 
-    saveLists();
+        const id =
+            "imported_" +
+            Date.now();
 
 
-    window.history.replaceState(
-      null,
-      "",
-      window.location.pathname
-    );
+        lists[id] = {
+
+            name:
+                sharedList.name +
+                " (Imported)",
+
+            items:
+                sharedList.items
+
+        };
 
 
-    showListore();
+        saveLists();
 
-    openList(
-      importedList.id
-    );
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname +
+            window.location.search
+        );
 
 
-    alert(
-      `"${importedList.name}" has been imported!`
-    );
+        renderLists();
 
-  } catch (error) {
+        alert(
+            `"${sharedList.name}" was imported successfully!`
+        );
 
-    console.error(
-      "Import failed:",
-      error
-    );
 
-  }
+    } catch {
+
+        alert(
+            "This QR code does not contain a valid Listore list."
+        );
+
+    }
 
 }
 
 
 /* =========================================================
    QR SCANNER
-   ========================================================= */
+========================================================= */
+
+function scannerStatus(message) {
+
+    document
+        .getElementById("scannerStatus")
+        .textContent = message;
+
+}
 
 
-/* ---------- START SCANNER ---------- */
+document
+    .getElementById("startScanner")
+    .addEventListener("click", startScanner);
+
+
+document
+    .getElementById("stopScanner")
+    .addEventListener("click", stopScanner);
+
 
 async function startScanner() {
 
-  if (scannerRunning) {
-
-    return;
-
-  }
-
-
-  if (
-    typeof Html5Qrcode ===
-    "undefined"
-  ) {
-
-    scannerStatus.textContent =
-      "SCANNER LIBRARY NOT LOADED";
-
-    return;
-
-  }
-
-
-  if (
-    !window.isSecureContext &&
-    location.hostname !== "localhost" &&
-    location.hostname !== "127.0.0.1"
-  ) {
-
-    scannerStatus.textContent =
-      "CAMERA REQUIRES HTTPS";
-
-    alert(
-      "Camera scanning requires HTTPS. Host your Listore site on an HTTPS website such as GitHub Pages."
-    );
-
-    return;
-
-  }
-
-
-  scanLocked = false;
-
-
-  qrReader.innerHTML = "";
-
-
-  qrScanner =
-    new Html5Qrcode(
-      "qr-reader"
-    );
-
-
-  scannerStatus.textContent =
-    "REQUESTING CAMERA...";
-
-
-  try {
-
-    const cameras =
-      await Html5Qrcode.getCameras();
+    if (scannerRunning) return;
 
 
     if (
-      !cameras ||
-      cameras.length === 0
+        typeof Html5Qrcode ===
+        "undefined"
     ) {
 
-      throw new Error(
-        "No camera found"
-      );
-
-    }
-
-
-    let cameraId =
-      cameras[0].id;
-
-
-    const backCamera =
-      cameras.find(
-        camera =>
-          /back|rear|environment/i
-            .test(camera.label)
-      );
-
-
-    if (backCamera) {
-
-      cameraId =
-        backCamera.id;
-
-    }
-
-
-    await qrScanner.start(
-
-      cameraId,
-
-      {
-
-        fps: 10,
-
-        qrbox: {
-          width: 230,
-          height: 230
-        },
-
-        aspectRatio: 1
-
-      },
-
-      decodedText => {
-
-        handleScannedQRCode(
-          decodedText
+        scannerStatus(
+            "QR scanner library could not load."
         );
 
-      },
+        return;
 
-      () => {}
-
-    );
-
-
-    scannerRunning = true;
-
-
-    startScannerBtn.classList.add(
-      "hidden"
-    );
-
-
-    stopScannerBtn.classList.remove(
-      "hidden"
-    );
-
-
-    scannerStatus.textContent =
-      "SCANNING — POINT AT A LISTORE QR CODE";
-
-  } catch (error) {
-
-    console.error(
-      "Camera startup error:",
-      error
-    );
-
-
-    scannerStatus.textContent =
-      "CAMERA COULD NOT START";
+    }
 
 
     if (
-      error.name ===
-      "NotAllowedError"
+        location.protocol !== "https:" &&
+        location.hostname !== "localhost" &&
+        location.hostname !== "127.0.0.1"
     ) {
 
-      scannerStatus.textContent =
-        "CAMERA PERMISSION DENIED";
+        scannerStatus(
+            "Camera scanning requires HTTPS or localhost."
+        );
 
-    } else if (
-      error.name ===
-      "NotFoundError"
-    ) {
-
-      scannerStatus.textContent =
-        "NO CAMERA FOUND";
+        return;
 
     }
-
-  }
-
-}
-
-
-/* ---------- STOP SCANNER ---------- */
-
-async function stopScanner() {
-
-  if (!qrScanner) {
-
-    return;
-
-  }
-
-
-  try {
-
-    if (scannerRunning) {
-
-      await qrScanner.stop();
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Scanner stop error:",
-      error
-    );
-
-  }
-
-
-  try {
-
-    qrScanner.clear();
-
-  } catch {}
-
-  
-  qrScanner = null;
-
-  scannerRunning = false;
-
-  scanLocked = false;
-
-
-  startScannerBtn.classList.remove(
-    "hidden"
-  );
-
-
-  stopScannerBtn.classList.add(
-    "hidden"
-  );
-
-
-  if (
-    scanPage.classList.contains(
-      "active-page"
-    )
-  ) {
-
-    scannerStatus.textContent =
-      "READY TO SCAN";
-
-  }
-
-}
-
-
-/* ---------- HANDLE SCAN ---------- */
-
-function handleScannedQRCode(decodedText) {
-
-  if (scanLocked) {
-
-    return;
-
-  }
-
-
-  scanLocked = true;
-
-
-  if (
-    !decodedText.includes(
-      "#share="
-    )
-  ) {
-
-    scannerStatus.textContent =
-      "NOT A LISTORE QR CODE";
-
-
-    scanLocked = false;
-
-    return;
-
-  }
-
-
-  try {
-
-    let encoded;
 
 
     try {
 
-      const url =
-        new URL(decodedText);
+        scanner =
+            new Html5Qrcode(
+                "qr-reader"
+            );
 
-      encoded =
-        url.hash.substring(7);
 
-    } catch {
+        const cameras =
+            await Html5Qrcode.getCameras();
 
-      const hashIndex =
-        decodedText.indexOf(
-          "#share="
+
+        if (!cameras.length) {
+
+            throw new Error(
+                "No camera found."
+            );
+
+        }
+
+
+        let cameraId =
+            cameras[0].id;
+
+
+        const preferredCamera =
+            cameras.find(camera =>
+                /back|rear|environment/i
+                    .test(camera.label)
+            );
+
+
+        if (preferredCamera) {
+
+            cameraId =
+                preferredCamera.id;
+
+        }
+
+
+        await scanner.start(
+
+            cameraId,
+
+            {
+                fps: 10,
+
+                qrbox: {
+                    width: 230,
+                    height: 230
+                }
+
+            },
+
+            decodedText => {
+
+                handleScannedQR(decodedText);
+
+            },
+
+            () => {}
+
         );
 
 
-      encoded =
-        decodedText.substring(
-          hashIndex + 7
+        scannerRunning = true;
+
+        scannerStatus(
+            "Camera active. Point it at a Listore QR code."
         );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        scannerStatus(
+            "Unable to start the camera. Check camera permissions and HTTPS."
+        );
+
+        scanner = null;
+
+        scannerRunning = false;
 
     }
-
-
-    encoded =
-      decodeURIComponent(
-        encoded
-      );
-
-
-    const sharedList =
-      decodeList(encoded);
-
-
-    if (
-      !sharedList ||
-      typeof sharedList.name !== "string" ||
-      !Array.isArray(sharedList.items)
-    ) {
-
-      throw new Error(
-        "Invalid list"
-      );
-
-    }
-
-
-    const importedList = {
-
-      id: generateId(),
-
-      name: sharedList.name,
-
-      items:
-        sharedList.items.map(
-          item => ({
-
-            text:
-              String(
-                item.text
-              ),
-
-            done:
-              Boolean(
-                item.done
-              )
-
-          })
-        )
-
-    };
-
-
-    lists.push(
-      importedList
-    );
-
-
-    saveLists();
-
-
-    scannerStatus.textContent =
-      "LIST IMPORTED";
-
-
-    stopScanner();
-
-
-    setTimeout(
-      () => {
-
-        showListore();
-
-        openList(
-          importedList.id
-        );
-
-      },
-      500
-    );
-
-  } catch (error) {
-
-    console.error(
-      "QR processing error:",
-      error
-    );
-
-
-    scannerStatus.textContent =
-      "INVALID LISTORE QR";
-
-
-    scanLocked = false;
-
-  }
 
 }
 
 
-startScannerBtn.addEventListener(
-  "click",
-  startScanner
-);
+async function stopScanner() {
+
+    if (!scanner || !scannerRunning) {
+
+        scannerStatus(
+            "Camera is stopped."
+        );
+
+        return;
+
+    }
 
 
-stopScannerBtn.addEventListener(
-  "click",
-  stopScanner
-);
+    try {
+
+        await scanner.stop();
+
+        scanner.clear();
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+
+    scanner = null;
+
+    scannerRunning = false;
+
+    scannerStatus(
+        "Camera stopped."
+    );
+
+}
+
+
+function handleScannedQR(text) {
+
+    if (!text.startsWith("#share=") &&
+        !text.includes("#share=")) {
+
+        scannerStatus(
+            "That QR code is not a Listore share code."
+        );
+
+        return;
+
+    }
+
+
+    let hash;
+
+    if (text.includes("#share=")) {
+
+        hash =
+            text.substring(
+                text.indexOf("#share=")
+            );
+
+    } else {
+
+        hash = text;
+
+    }
+
+
+    try {
+
+        const encoded =
+            hash.substring(7);
+
+        const sharedList =
+            decodeList(encoded);
+
+
+        if (
+            !sharedList ||
+            typeof sharedList.name !== "string" ||
+            !Array.isArray(sharedList.items)
+        ) {
+
+            throw new Error();
+
+        }
+
+
+        const id =
+            "scanned_" +
+            Date.now();
+
+
+        lists[id] = {
+
+            name:
+                sharedList.name +
+                " (Imported)",
+
+            items:
+                sharedList.items
+
+        };
+
+
+        saveLists();
+
+        renderLists();
+
+
+        scannerStatus(
+            `"${sharedList.name}" imported successfully!`
+        );
+
+
+        stopScanner();
+
+
+        document
+            .querySelector(
+                '[data-page="listorePage"]'
+            )
+            .click();
+
+
+    } catch {
+
+        scannerStatus(
+            "Invalid Listore QR code."
+        );
+
+    }
+
+}
 
 
 /* =========================================================
    CLOCK
-   ========================================================= */
-
-
-/* ---------- UPDATE PLANETS ---------- */
-
-function updatePlanetPositions(now) {
-
-  const minutes =
-    now.getMinutes();
-
-  const seconds =
-    now.getSeconds();
-
-  const milliseconds =
-    now.getMilliseconds();
-
-
-  /*
-    Minute planet:
-    60 minutes = 360 degrees.
-
-    We include seconds and milliseconds so
-    the movement is smooth and accurate.
-  */
-
-  const minuteValue =
-    minutes +
-    seconds / 60 +
-    milliseconds / 60000;
-
-
-  const minuteAngle =
-    minuteValue * 6;
-
-
-  /*
-    Second planet:
-    60 seconds = 360 degrees.
-  */
-
-  const secondValue =
-    seconds +
-    milliseconds / 1000;
-
-
-  const secondAngle =
-    secondValue * 6;
-
-
-  minutePlanet.style.transform =
-    `rotate(${minuteAngle}deg) translateX(102px)`;
-
-
-  secondPlanet.style.transform =
-    `rotate(${secondAngle}deg) translateX(135px)`;
-
-}
-
-
-/* ---------- UPDATE CLOCK ---------- */
+========================================================= */
 
 function updateClock() {
 
-  const now =
-    new Date();
+    const now =
+        new Date();
 
 
-  let hours =
-    now.getHours();
+    const time =
+        now.toLocaleTimeString(
+            undefined,
+            {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false
+            }
+        );
 
 
-  const minutes =
-    String(
-      now.getMinutes()
-    ).padStart(2, "0");
+    const date =
+        now.toLocaleDateString(
+            undefined,
+            {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric"
+            }
+        );
 
 
-  const seconds =
-    String(
-      now.getSeconds()
-    ).padStart(2, "0");
+    document
+        .getElementById("clockTime")
+        .textContent = time;
 
 
-  const ampm =
-    hours >= 12
-      ? "PM"
-      : "AM";
+    document
+        .getElementById("clockDate")
+        .textContent = date;
 
 
-  hours =
-    hours % 12;
-
-
-  if (hours === 0) {
-
-    hours = 12;
-
-  }
-
-
-  hours =
-    String(hours)
-      .padStart(2, "0");
-
-
-  document.getElementById(
-    "time"
-  ).textContent =
-    `${hours}:${minutes}:${seconds}`;
-
-
-  document.getElementById(
-    "ampm"
-  ).textContent =
-    ampm;
-
-
-  document.getElementById(
-    "date"
-  ).textContent =
-    now.toLocaleDateString(
-      undefined,
-      {
-
-        weekday: "long",
-
-        year: "numeric",
-
-        month: "long",
-
-        day: "numeric"
-
-      }
-    );
-
-
-  updatePlanetPositions(
-    now
-  );
+    updatePlanetPositions(now);
 
 }
 
 
-setInterval(
-  updateClock,
-  250
-);
+/* =========================================================
+   TIME-SYNCHRONIZED PLANETS
+========================================================= */
 
-updateClock();
+function updatePlanetPositions(now) {
+
+    const minutePlanet =
+        document.getElementById(
+            "minuteOrbitPlanet"
+        );
+
+    const secondPlanet =
+        document.getElementById(
+            "secondOrbitPlanet"
+        );
+
+
+    if (!minutePlanet || !secondPlanet) {
+        return;
+    }
+
+
+    const seconds =
+        now.getSeconds();
+
+    const milliseconds =
+        now.getMilliseconds();
+
+    const minutes =
+        now.getMinutes();
+
+
+    /*
+        Minute planet:
+        One complete orbit = 60 minutes.
+    */
+
+    const minuteProgress =
+        (
+            minutes +
+            seconds / 60 +
+            milliseconds / 60000
+        ) / 60;
+
+
+    /*
+        Second planet:
+        One complete orbit = 60 seconds.
+    */
+
+    const secondProgress =
+        (
+            seconds +
+            milliseconds / 1000
+        ) / 60;
+
+
+    positionPlanet(
+        minutePlanet,
+        195,
+        minuteProgress
+    );
+
+
+    positionPlanet(
+        secondPlanet,
+        285,
+        secondProgress
+    );
+
+}
+
+
+function positionPlanet(
+    planet,
+    radius,
+    progress
+) {
+
+    const scene =
+        document.querySelector(
+            ".space-scene"
+        );
+
+
+    if (!scene) return;
+
+
+    const center =
+        scene.offsetWidth / 2;
+
+
+    const angle =
+        (
+            progress * Math.PI * 2
+        ) -
+        Math.PI / 2;
+
+
+    const x =
+        center +
+        Math.cos(angle) * radius;
+
+
+    const y =
+        center +
+        Math.sin(angle) * radius;
+
+
+    planet.style.left =
+        `${x}px`;
+
+    planet.style.top =
+        `${y}px`;
+
+}
 
 
 /* =========================================================
    WEATHER
-   ========================================================= */
+========================================================= */
 
 async function loadWeather() {
 
-  const weatherTemp =
-    document.getElementById(
-      "weatherTemp"
-    );
+    const weatherText =
+        document.getElementById(
+            "weatherText"
+        );
 
-  const weatherDescription =
-    document.getElementById(
-      "weatherDescription"
-    );
+    const weatherTemp =
+        document.getElementById(
+            "weatherTemp"
+        );
 
-  const weatherIcon =
-    document.getElementById(
-      "weatherIcon"
-    );
-
-
-  try {
-
-    const response =
-      await fetch(
-        "https://api.open-meteo.com/v1/forecast?latitude=43.8561&longitude=-79.3370&current=temperature_2m,weather_code&temperature_unit=celsius"
-      );
+    const weatherIcon =
+        document.getElementById(
+            "weatherIcon"
+        );
 
 
-    if (!response.ok) {
+    if (!navigator.geolocation) {
 
-      throw new Error(
-        "Weather request failed"
-      );
+        weatherText.textContent =
+            "Location unavailable";
+
+        return;
 
     }
 
 
-    const data =
-      await response.json();
+    navigator.geolocation.getCurrentPosition(
+
+        async position => {
+
+            try {
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
 
 
-    const temperature =
-      Math.round(
-        data.current.temperature_2m
-      );
+                const url =
+                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&temperature_unit=celsius`;
 
 
-    const code =
-      data.current.weather_code;
+                const response =
+                    await fetch(url);
 
 
-    let description =
-      "Clear";
-
-    let icon =
-      "☀";
+                const data =
+                    await response.json();
 
 
-    if (code === 0) {
-
-      description =
-        "Clear sky";
-
-      icon =
-        "☀";
-
-    } else if (code <= 3) {
-
-      description =
-        "Partly cloudy";
-
-      icon =
-        "⛅";
-
-    } else if (code <= 48) {
-
-      description =
-        "Foggy";
-
-      icon =
-        "🌫";
-
-    } else if (code <= 67) {
-
-      description =
-        "Rain";
-
-      icon =
-        "🌧";
-
-    } else if (code <= 77) {
-
-      description =
-        "Snow";
-
-      icon =
-        "❄";
-
-    } else if (code <= 82) {
-
-      description =
-        "Rain showers";
-
-      icon =
-        "🌦";
-
-    } else if (code <= 86) {
-
-      description =
-        "Snow showers";
-
-      icon =
-        "🌨";
-
-    } else {
-
-      description =
-        "Thunderstorm";
-
-      icon =
-        "⛈";
-
-    }
+                const temperature =
+                    Math.round(
+                        data.current.temperature_2m
+                    );
 
 
-    weatherTemp.textContent =
-      `${temperature}°C`;
+                const code =
+                    data.current.weather_code;
 
 
-    weatherDescription.textContent =
-      description;
+                const condition =
+                    getWeatherCondition(code);
 
 
-    weatherIcon.textContent =
-      icon;
+                weatherText.textContent =
+                    condition.text;
 
-  } catch {
 
-    weatherTemp.textContent =
-      "--°";
+                weatherTemp.textContent =
+                    `${temperature}°`;
 
-    weatherDescription.textContent =
-      "Weather unavailable";
 
-    weatherIcon.textContent =
-      "☁";
+                weatherIcon.textContent =
+                    condition.icon;
 
-  }
+
+            } catch {
+
+                weatherText.textContent =
+                    "Weather unavailable";
+
+            }
+
+        },
+
+        () => {
+
+            weatherText.textContent =
+                "Location permission needed";
+
+            weatherTemp.textContent =
+                "--";
+
+        }
+
+    );
 
 }
 
 
-loadWeather();
+function getWeatherCondition(code) {
+
+    if (code === 0) {
+
+        return {
+            text: "Clear skies",
+            icon: "☀️"
+        };
+
+    }
+
+    if (code <= 3) {
+
+        return {
+            text: "Partly cloudy",
+            icon: "⛅"
+        };
+
+    }
+
+    if (code <= 48) {
+
+        return {
+            text: "Cloudy",
+            icon: "☁️"
+        };
+
+    }
+
+    if (code <= 67) {
+
+        return {
+            text: "Rain",
+            icon: "🌧️"
+        };
+
+    }
+
+    if (code <= 77) {
+
+        return {
+            text: "Snow",
+            icon: "❄️"
+        };
+
+    }
+
+    if (code <= 82) {
+
+        return {
+            text: "Rain showers",
+            icon: "🌦️"
+        };
+
+    }
+
+    return {
+
+        text: "Stormy",
+        icon: "⛈️"
+
+    };
+
+}
 
 
 /* =========================================================
-   START
-   ========================================================= */
+   HTML ESCAPE
+========================================================= */
 
-loadLists();
+function escapeHtml(text) {
 
-renderLists();
+    const div =
+        document.createElement("div");
 
-importSharedListFromHash();
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   STARTUP
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadLists();
+
+        renderLists();
+
+        updateClock();
+
+        setInterval(
+            updateClock,
+            100
+        );
+
+        loadWeather();
+
+        importSharedListFromHash();
+
+    }
+);
