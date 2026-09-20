@@ -5,27 +5,162 @@
   <title>𝕃𝕚𝕤𝕥𝕠𝕣𝕖</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <meta name="theme-color" content="#020812">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
   <div class="app">
-    <h1>𝕃𝕚𝕤𝕥𝕠𝕣𝕖</h1>
 
-    <!-- FORM STAYS -->
-    <form id="listForm">
-      <input 
-        id="itemInput" 
-        placeholder="Add an item..." 
-        autocomplete="off"
-      />
-      <button type="submit">Add</button>
-    </form>
+    <!-- TOP NAVIGATION -->
+    <nav class="top-nav">
 
-    <ul id="list"></ul>
+      <button id="homeTab" class="nav-button active">
+        <span class="nav-icon">⌂</span>
+        <span>Home</span>
+      </button>
+
+      <div class="nav-divider"></div>
+
+      <button id="listoreTab" class="nav-button">
+        <span class="nav-icon">🛒</span>
+        <span>Listore</span>
+      </button>
+
+    </nav>
+
+
+    <!-- HOME PAGE -->
+    <main id="homePage" class="page">
+
+      <section class="clock-section">
+
+        <div class="orbit-system">
+
+          <div class="outer-orbit"></div>
+          <div class="inner-orbit"></div>
+
+          <div class="orbit-ticks"></div>
+
+          <div id="minutePlanet" class="planet minute-planet"></div>
+          <div id="secondPlanet" class="planet second-planet"></div>
+
+          <div class="clock-core">
+
+            <div id="clockTime" class="clock-time">
+              12:00
+            </div>
+
+            <div id="clockPeriod" class="clock-period">
+              PM
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div id="clockDate" class="clock-date">
+          SUNDAY, SEPTEMBER 20
+        </div>
+
+
+        <div class="clock-legend">
+
+          <div class="legend-item">
+            <span class="legend-planet minute-legend"></span>
+            <span>Minutes</span>
+          </div>
+
+          <div class="legend-divider"></div>
+
+          <div class="legend-item">
+            <span class="legend-planet second-legend"></span>
+            <span>Seconds</span>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- WEATHER -->
+      <section class="weather-card">
+
+        <div id="weatherIcon" class="weather-icon">
+          ☀
+        </div>
+
+        <div class="weather-info">
+
+          <div id="temperature" class="temperature">
+            --°C
+          </div>
+
+          <div id="weatherDescription" class="weather-description">
+            Loading weather...
+          </div>
+
+          <div class="weather-details">
+
+            <span>
+              H: <strong id="highTemperature">--°</strong>
+            </span>
+
+            <span>
+              L: <strong id="lowTemperature">--°</strong>
+            </span>
+
+            <span class="weather-divider"></span>
+
+            <span>
+              💧 <strong id="rainChance">--%</strong>
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="weather-location">
+          <span class="location-icon">⌖</span>
+          <span>Markham, ON</span>
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- LISTORE PAGE -->
+    <main id="listorePage" class="page listore-page">
+
+      <h1>𝕃𝕚𝕤𝕥𝕠𝕣𝕖</h1>
+
+      <form id="listForm">
+
+        <input
+          id="itemInput"
+          placeholder="Add an item..."
+          autocomplete="off"
+        />
+
+        <button type="submit">
+          Add
+        </button>
+
+      </form>
+
+      <ul id="list"></ul>
+
+    </main>
+
   </div>
 
+
   <script src="script.js"></script>
+
 </body>
 </html>
