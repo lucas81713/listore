@@ -7,7 +7,6 @@
 
   <link rel="stylesheet" href="style.css">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 
@@ -15,7 +14,6 @@
 
   <div class="app">
 
-    <!-- TOP NAVIGATION -->
     <nav class="top-nav">
 
       <button class="nav-btn active" id="homeTab">
@@ -33,7 +31,8 @@
     </nav>
 
 
-    <!-- HOME PAGE -->
+    <!-- HOME -->
+
     <section id="homePage" class="page active-page">
 
       <div class="home-header">
@@ -42,15 +41,14 @@
       </div>
 
 
-      <!-- ORBITAL CLOCK -->
       <div class="clock-container">
 
         <div class="orbit orbit-minutes">
-          <div class="planet minute-planet"></div>
+          <div class="planet minute-planet" id="minutePlanet"></div>
         </div>
 
         <div class="orbit orbit-seconds">
-          <div class="planet second-planet"></div>
+          <div class="planet second-planet" id="secondPlanet"></div>
         </div>
 
         <div class="clock-center">
@@ -73,7 +71,6 @@
       </div>
 
 
-      <!-- WEATHER -->
       <div class="weather-card">
 
         <div class="weather-icon" id="weatherIcon">
@@ -101,10 +98,10 @@
     </section>
 
 
-    <!-- LISTORE PAGE -->
+    <!-- LISTORE -->
+
     <section id="listorePage" class="page">
 
-      <!-- LIST MANAGER -->
       <div id="listsView">
 
         <div class="section-header">
@@ -150,7 +147,6 @@
       </div>
 
 
-      <!-- INDIVIDUAL LIST -->
       <div id="singleListView" class="hidden">
 
         <div class="list-topbar">
@@ -217,7 +213,8 @@
     </section>
 
 
-    <!-- SCAN QR PAGE -->
+    <!-- SCAN QR -->
+
     <section id="scanPage" class="page">
 
       <div class="scanner-page">
@@ -247,7 +244,7 @@
 
 
         <div class="scanner-status" id="scannerStatus">
-          CAMERA READY
+          READY TO SCAN
         </div>
 
 
@@ -280,6 +277,7 @@
 
 
     <!-- CREATE LIST MODAL -->
+
     <div class="modal hidden" id="createListModal">
 
       <div class="modal-box">
@@ -332,6 +330,7 @@
 
 
     <!-- RENAME LIST MODAL -->
+
     <div class="modal hidden" id="renameListModal">
 
       <div class="modal-box">
@@ -384,6 +383,7 @@
 
 
     <!-- QR SHARE MODAL -->
+
     <div class="modal hidden" id="qrModal">
 
       <div class="modal-box qr-box">
@@ -431,6 +431,7 @@
     </div>
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="script.js"></script>
 
   </div>
